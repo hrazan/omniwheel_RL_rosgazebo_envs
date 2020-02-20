@@ -71,8 +71,7 @@
   <xacro:wheel_link name="front" linkrpy="0 0 0" axisxyz="0 1 0" originxyz="0 0.15 -0.15"/>
   <xacro:wheel_link name="back" linkrpy="0 0 0" axisxyz="0 1 0" originxyz="0 -0.15 -0.15"/>
 
-  <!-- Lidar sensor 
-       ray_count_horizontal : 40 (Qlearning), 200 (deepQ)-->
+  <!-- Lidar sensor -->
   <xacro:include filename="lidar_sensor.urdf.xacro"/>
   <!--Q:ray_count_horizontal=60, DQN:ray_count_horizontal=216 -->
   <xacro:lidar_sensor
@@ -84,7 +83,7 @@
     max_range="20.0"
     field_of_view_horizontal="${270*M_PI/180}"
     field_of_view_vertical="${1*M_PI/180}"
-    ray_count_horizontal="60" 
+    ray_count_horizontal="216" 
     ray_count_vertical="1">
     <origin xyz="0 0.0 0.17" rpy="0 0 0"/>
   </xacro:lidar_sensor>
