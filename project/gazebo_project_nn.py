@@ -8,7 +8,7 @@ import random
 from math import pow, atan2, sqrt, exp
 
 from gym import utils, spaces
-from gym_gazebo.envs import gazebo_env
+from gym_gazebo.project_envs import gazebo_env
 from geometry_msgs.msg import Twist
 from std_srvs.srv import Empty
 
