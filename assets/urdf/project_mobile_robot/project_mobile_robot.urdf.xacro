@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<robot name="omni" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:property name="M_PI" value="3.1415926535897931" /> 
+
+  <material name="grey">
+    <color rgba="0.65 0.65 0.65 1"/>
+  </material>
+
+  <material name="black">
+    <color rgba="0.3 0.3 0.3 1"/>
+  </material>
+
+  <xacro:macro name="default_inertial" params="mass">
+    <inertial>
+      <mass value="${mass}"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </xacro:macro>
+
+<link name="base_footprint"/>
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.3" radius="0.201"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.3" radius="0.201"/>
+      </geometry>
+    </collision>
+    <xacro:default_inertial mass="10"/>
+  </link>
+
+  <joint name="base_link_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+  </joint>
+
+  <xacro:macro name="wheel_link" params="name linkrpy axisxyz originxyz">
+    <link name="${name}_wheel">
+      <visual>
+        <geometry>
+          <sphere radius="0.05"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="${linkrpy}"/>
+        <material name="black"/>
+      </visual>
+      <collision>
+        <geometry>
+          <sphere radius="0.05"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="${linkrpy}"/>
+      </collision>
+      <xacro:default_inertial mass="1"/>
+    </link>
+
+    <joint name="${name}_wheel_joint" type="fixed">
+      <axis rpy="0 0 0" xyz="${axisxyz}"/>
+      <parent link="base_link"/>
+      <child link="${name}_wheel"/>
+      <origin xyz="${originxyz}"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:wheel_link name="left" linkrpy="0 0 0" axisxyz="1 0 0" originxyz="0.15 0 -0.15"/>
+  <xacro:wheel_link name="right" linkrpy="0 0 0" axisxyz="1 0 0" originxyz="-0.15 0 -0.15"/>
+  <xacro:wheel_link name="front" linkrpy="0 0 0" axisxyz="0 1 0" originxyz="0 0.15 -0.15"/>
+  <xacro:wheel_link name="back" linkrpy="0 0 0" axisxyz="0 1 0" originxyz="0 -0.15 -0.15"/>
+
+  <!-- Lidar sensor 
+       ray_count_horizontal : 40 (Qlearning), 200 (deepQ)-->
+  <xacro:include filename="lidar_sensor.urdf.xacro"/>
+  <!--Q:ray_count_horizontal=60, DQN:ray_count_horizontal=216 -->
+  <xacro:lidar_sensor
+    name="sonar"
+    parent="base_link"
+    ros_topic="sonar_front"
+    update_rate="10"
+    min_range="0.06"
+    max_range="20.0"
+    field_of_view_horizontal="${270*M_PI/180}"
+    field_of_view_vertical="${1*M_PI/180}"
+    ray_count_horizontal="60" 
+    ray_count_vertical="1">
+    <origin xyz="0 0.0 0.17" rpy="0 0 0"/>
+  </xacro:lidar_sensor>
+
+  <gazebo>
+    <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <odometryRate>20.0</odometryRate>
+      <robotBaseFrame>base_footprint</robotBaseFrame>
+    </plugin>
+  </gazebo>
+
+</robot>
