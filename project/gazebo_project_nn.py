@@ -62,7 +62,7 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
     def random_start(self):
         state_msg = ModelState()
         state_msg.model_name = 'robot'
-        state_msg.pose.position.x = random.randint(0,8)
+        state_msg.pose.position.x = random.randint(0,9)
         state_msg.pose.position.y = random.uniform(-1,1)
 
         rospy.wait_for_service('/gazebo/set_model_state')
@@ -224,7 +224,7 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/unpause_physics service call failed")
 
-        #self.random_start()
+        self.random_start()
         time.sleep(1)
 
         #read laser data
