@@ -119,8 +119,9 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         #print data.ranges[0]
         dist_to_goal_x = self.goalpose.x - self.pose.x
         dist_to_goal_y = self.goalpose.y - self.pose.y
-        state = data.ranges[:] + [dist_to_goal_x, dist_to_goal_y]
-        return state, done
+        state_list = list(data.ranges[:]) + [dist_to_goal_x, dist_to_goal_y]
+        state_tuple = tuple(state_list)
+        return state_tuple, done
 
     def _seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
