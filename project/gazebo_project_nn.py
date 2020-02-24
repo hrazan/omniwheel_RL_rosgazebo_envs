@@ -117,8 +117,8 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
             if (min_range > data.ranges[i] > 0):
                 done = True
         #print data.ranges[0]
-        dist_to_goal_x = self.goal.x - self.pose.x
-        dist_to_goal_y = self.goal.y - self.pose.y
+        dist_to_goal_x = self.goalpose.x - self.pose.x
+        dist_to_goal_y = self.goalpose.y - self.pose.y
         state = data.ranges[:] + [dist_to_goal_x, dist_to_goal_y]
         return state, done
 
