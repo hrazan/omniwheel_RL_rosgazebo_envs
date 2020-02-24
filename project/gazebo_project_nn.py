@@ -116,7 +116,11 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         for i, item in enumerate(data.ranges):
             if (min_range > data.ranges[i] > 0):
                 done = True
-        return data.ranges, done
+        #print data.ranges[0]
+        dist_to_goal_x = self.goal.x - self.pose.x
+        dist_to_goal_y = self.goal.y - self.pose.y
+        state = data.ranges[:] + [dist_to_goal_x, dist_to_goal_y]
+        return state, done
 
     def _seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -154,14 +158,36 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
             vel_cmd.linear.y = -0.2
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
-        """
         elif action == 3: #BACK
             vel_cmd = Twist()
             vel_cmd.linear.x = -0.2
             vel_cmd.linear.y = 0.0
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
-        """
+        elif action == 4: #LEFT FORWARD
+            vel_cmd = Twist()
+            vel_cmd.linear.x = 0.1414213562
+            vel_cmd.linear.y = 0.1414213562
+            vel_cmd.angular.z = 0.0
+            self.vel_pub.publish(vel_cmd)
+        elif action == 5: #RIGHT FORWARD
+            vel_cmd = Twist()
+            vel_cmd.linear.x = 0.1414213562
+            vel_cmd.linear.y = -0.1414213562
+            vel_cmd.angular.z = 0.0
+            self.vel_pub.publish(vel_cmd)
+        elif action == 6: #LEFT BACK
+            vel_cmd = Twist()
+            vel_cmd.linear.x = -0.1414213562
+            vel_cmd.linear.y = 0.1414213562
+            vel_cmd.angular.z = 0.0
+            self.vel_pub.publish(vel_cmd)
+        elif action == 7: #RIGHT BACK
+            vel_cmd = Twist()
+            vel_cmd.linear.x = -0.1414213562
+            vel_cmd.linear.y = -0.1414213562
+            vel_cmd.angular.z = 0.0
+            self.vel_pub.publish(vel_cmd)
 
         time.sleep(0.02)
         self.reset_vel()
@@ -188,7 +214,7 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         distance = self.euclidean_distance(self.pose, self.goalpose)
 
         if not done:
-            if action == 0: reward = 1
+            if  self.euclidean_distance(self.beforepose, self.goalpose) > distance : reward = 20/distance
             #elif action == 3: -1
             else: reward = 0
         else:
