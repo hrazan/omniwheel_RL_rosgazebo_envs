@@ -251,7 +251,7 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/unpause_physics service call failed")
 
-        self.random_start()
+        #self.random_start()
         time.sleep(1)
 
         #read laser data
