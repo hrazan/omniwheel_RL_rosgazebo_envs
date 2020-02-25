@@ -79,7 +79,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>0.8 -1.2 5.8 0 1.56 3.14</pose> <!--3x10(4.7 -1 17 ...),3x3(0.8 -1.2 5.8 ...) -->
+        <pose>4.7 -1 17 0 1.56 3.14</pose> <!--3x10(4.7 -1 17 ...),3x3(0.8 -1.2 5.8 ...) -->
         <view_controller>orbit</view_controller>
       </camera>
     </gui>
