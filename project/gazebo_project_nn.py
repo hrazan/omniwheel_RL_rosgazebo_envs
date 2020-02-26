@@ -114,7 +114,7 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         min_range = 0.301
         state_list = list(data.ranges[:])
         done = False
-        for i, item in enumerate(state_list[i]):
+        for i, item in enumerate(data.ranges):
             if (min_range > data.ranges[i] > 0):
                 done = True
             elif (0.5 > data.ranges[i] > 0.401):
