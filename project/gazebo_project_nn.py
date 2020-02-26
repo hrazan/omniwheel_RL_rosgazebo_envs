@@ -112,14 +112,21 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
 
     def calculate_observation(self,data):
         min_range = 0.301
+        state_list = list(data.ranges[:])
         done = False
-        for i, item in enumerate(data.ranges):
+        for i, item in enumerate(state_list[i]):
             if (min_range > data.ranges[i] > 0):
                 done = True
+            elif (0.5 > data.ranges[i] > 0.401):
+                state_list[i] = 1
+            elif (1 > data.ranges[i] >= 0.5):
+                state_list[i] = 2
+            else :
+                state_list[i] = 3
         #print data.ranges[0]
         dist_to_goal_x = self.goalpose.x - self.pose.x
         dist_to_goal_y = self.goalpose.y - self.pose.y
-        state_list = list(data.ranges[:]) + [dist_to_goal_x, dist_to_goal_y]
+        state_list = state_list[:] + [dist_to_goal_x, dist_to_goal_y]
         state_tuple = tuple(state_list)
         return state_tuple, done
 
