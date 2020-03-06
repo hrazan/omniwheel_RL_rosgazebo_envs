@@ -55,6 +55,7 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         self.goalpose.x = 15.000 # map0: 1.5, map1: 1.25, map2: 2.0
         self.goalpose.y = 0.000 # map0,1: 0.0, map2: -0.25
         self.get_pose(self.beforepose)
+        self.subgoal_as_dist_to_goal = 20 # max. lidar's value
         #self.beforepose.x = 0.0000
         #self.beforepose.y = 0.0000
 
@@ -216,7 +217,9 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         distance = self.euclidean_distance(self.pose, self.goalpose)
 
         if not done:
-            if  self.euclidean_distance(self.beforepose, self.goalpose) > distance : reward = 20/distance
+            if  distance < self.euclidean_distance(self.beforepose, self.goalpose) and distance < self.subgoal_as_dist_to_goal :
+                reward = 20/distance
+                self.subgoal_as_dist_to_goal = distance
             #elif action == 3: -1
             else: reward = 0
         else:
@@ -226,11 +229,11 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         #print("Distance to Goal(before):", self.euclidean_distance(self.beforepose, self.goalpose))
         #print("Distance to Goal:", self.euclidean_distance(self.pose, self.goalpose))
         #print("Reward:", reward)
-
+        
         self.beforepose.x = self.pose.x
         self.beforepose.y = self.pose.y
-
-        self.before_avg_data = avg_data
+        
+        #self.before_avg_data = avg_data
 
         return np.asarray(state), reward, done, {}
 
