@@ -55,7 +55,7 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         self.goalpose.x = 15.000 # map0: 1.5, map1: 1.25, map2: 2.0
         self.goalpose.y = 0.000 # map0,1: 0.0, map2: -0.25
         self.get_pose(self.beforepose)
-        self.subgoal_as_dist_to_goal = 20 # max. lidar's value
+        self.subgoal_as_dist_to_goal = 1000 # max. lidar's value
         #self.beforepose.x = 0.0000
         #self.beforepose.y = 0.0000
 
@@ -278,6 +278,7 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
 
         self.beforepose.x = self.pose.x
         self.beforepose.y = self.pose.y
+        self.subgoal_as_dist_to_goal = 1000
         #print(state)
 
         return np.asarray(state)
