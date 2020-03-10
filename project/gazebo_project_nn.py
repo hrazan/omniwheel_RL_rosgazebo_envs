@@ -218,12 +218,12 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
 
         if not done:
             if  distance < self.euclidean_distance(self.beforepose, self.goalpose) and distance < self.subgoal_as_dist_to_goal :
-                reward = 20/distance
+                reward = 100/distance
                 self.subgoal_as_dist_to_goal = distance
             #elif action == 3: -1
-            else: reward = 0
+            else: reward = 0.1
         else:
-            reward = -10
+            reward = 0.01
 
         #print("Action:", action)
         #print("Distance to Goal(before):", self.euclidean_distance(self.beforepose, self.goalpose))
