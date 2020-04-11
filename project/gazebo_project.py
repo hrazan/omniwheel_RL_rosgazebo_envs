@@ -184,25 +184,25 @@ class ProjectEnv(gazebo_env.GazeboEnv):
 
         if action == 0: #FORWARD
             vel_cmd = Twist()
-            vel_cmd.linear.x = 0.5
+            vel_cmd.linear.x = 0.2
             vel_cmd.linear.y = 0.0
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
         elif action == 1: #LEFT
             vel_cmd = Twist()
             vel_cmd.linear.x = 0.0
-            vel_cmd.linear.y = 0.5
+            vel_cmd.linear.y = 0.2
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
         elif action == 2: #RIGHT
             vel_cmd = Twist()
             vel_cmd.linear.x = 0.0
-            vel_cmd.linear.y = -0.5
+            vel_cmd.linear.y = -0.2
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
         elif action == 3: #BACK
             vel_cmd = Twist()
-            vel_cmd.linear.x = -0.5
+            vel_cmd.linear.x = -0.2
             vel_cmd.linear.y = 0.0
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
@@ -273,7 +273,7 @@ class ProjectEnv(gazebo_env.GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/unpause_physics service call failed")
 
-        self.random_start()
+        #self.random_start()
         time.sleep(1.5) #DQN25x=3,Q25x=1.5
 
         #read laser data

@@ -35,8 +35,7 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         self.unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
         self.pause = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
         self.reset_proxy = rospy.ServiceProxy('/gazebo/reset_simulation', Empty)
-
-        self.action_space = spaces.Discrete(3) #F,L,R,B
+        
         self.reward_range = (-np.inf, np.inf)
         
         self.sim_time = Clock()
@@ -161,6 +160,19 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
             vel_cmd.linear.y = -0.2
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
+        elif action == 3: #LEFT FORWARD
+            vel_cmd = Twist()
+            vel_cmd.linear.x = 0.1414213562
+            vel_cmd.linear.y = 0.1414213562
+            vel_cmd.angular.z = 0.0
+            self.vel_pub.publish(vel_cmd)
+        elif action == 4: #RIGHT FORWARD
+            vel_cmd = Twist()
+            vel_cmd.linear.x = 0.1414213562
+            vel_cmd.linear.y = -0.1414213562
+            vel_cmd.angular.z = 0.0
+            self.vel_pub.publish(vel_cmd)
+        """
         elif action == 3: #BACK
             vel_cmd = Twist()
             vel_cmd.linear.x = -0.2
@@ -191,6 +203,33 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
             vel_cmd.linear.y = -0.1414213562
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
+        """
+        """
+        elif action == 3: #LEFT FORWARD
+            vel_cmd = Twist()
+            vel_cmd.linear.x = 0.1414213562
+            vel_cmd.linear.y = 0.1414213562
+            vel_cmd.angular.z = 0.0
+            self.vel_pub.publish(vel_cmd)
+        elif action == 4: #RIGHT FORWARD
+            vel_cmd = Twist()
+            vel_cmd.linear.x = 0.1414213562
+            vel_cmd.linear.y = -0.1414213562
+            vel_cmd.angular.z = 0.0
+            self.vel_pub.publish(vel_cmd)
+        elif action == 5: #LEFT BACK
+            vel_cmd = Twist()
+            vel_cmd.linear.x = -0.1414213562
+            vel_cmd.linear.y = 0.1414213562
+            vel_cmd.angular.z = 0.0
+            self.vel_pub.publish(vel_cmd)
+        elif action == 6: #RIGHT BACK
+            vel_cmd = Twist()
+            vel_cmd.linear.x = -0.1414213562
+            vel_cmd.linear.y = -0.1414213562
+            vel_cmd.angular.z = 0.0
+            self.vel_pub.publish(vel_cmd)
+        """
 
         time.sleep(0.02)
         self.reset_vel()
@@ -220,7 +259,6 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
             if  distance < self.euclidean_distance(self.beforepose, self.goalpose) and distance < self.subgoal_as_dist_to_goal :
                 reward = 100/distance
                 self.subgoal_as_dist_to_goal = distance
-            #elif action == 3: -1
             else: reward = 0.1
         else:
             reward = 0.01
