@@ -69,5 +69,17 @@
       </distribution>
     </population>
     
+    <!-- A ball -->
+    <include>
+      <uri>model://project_ball</uri>
+      <pose>9.5 0 3 0 0 0</pose>
+    </include>
+    
+    <!-- A plate -->
+    <include>
+      <uri>model://project_plate</uri>
+      <pose>9.5 0 1.5 0 -0.15 0</pose>
+    </include>
+    
   </world>
 </sdf>

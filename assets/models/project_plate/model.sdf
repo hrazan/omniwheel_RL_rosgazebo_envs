@@ -1,16 +1,15 @@
 <?xml version='1.0'?>
 <sdf version='1.5'>
-  <model name='project_obstacle'>
+  <model name='project_plate'>
     <pose frame=''>0 0 0 0 0 0</pose>
-    <link name='cylinder_obstacle'>
-      <collision name='cylinder_obstacle_Collision'>
+    <link name='plate'>
+      <collision name='plate_Collision'>
         <geometry>
-          <cylinder>
-            <radius>0.2</radius>
-            <length>0.5</length>
-          </cylinder>
+          <box>
+            <size>3 3 0.02</size>
+          </box>
         </geometry>
-        <pose frame=''>0 0 0.25 0 0 0</pose>
+        <pose frame=''>0 0 0.01 0 0 0</pose>
         <surface>
           <friction>
             <ode>
@@ -22,12 +21,11 @@
           </friction>
         </surface>
       </collision>
-      <visual name='cylinder_obstacle_Visual'>
+      <visual name='plate_Visual'>
         <geometry>
-          <cylinder>
-            <radius>0.2</radius>
-            <length>0.5</length>
-          </cylinder>
+          <box>
+            <size>3 3 0.02</size>
+          </box>
         </geometry>
         <material>
           <script>
@@ -36,7 +34,7 @@
           </script>
           <ambient>1 1 1 1</ambient>
         </material>
-        <pose frame=''>0 0 0.25 0 0 0</pose>
+        <pose frame=''>0 0 0.01 0 0 0</pose>
       </visual>
     </link>
     <static>1</static>

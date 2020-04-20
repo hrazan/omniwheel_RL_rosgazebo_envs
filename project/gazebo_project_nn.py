@@ -35,6 +35,7 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         self.unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
         self.pause = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
         self.reset_proxy = rospy.ServiceProxy('/gazebo/reset_simulation', Empty)
+        self.reset_world = rospy.ServiceProxy('/gazebo/reset_world', Empty)
         
         self.reward_range = (-np.inf, np.inf)
         
@@ -284,6 +285,14 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
             self.reset_proxy()
         except (rospy.ServiceException) as e:
             print ("/gazebo/reset_simulation service call failed")
+        """
+        # Reset the position of obstacles (reset the world)
+        rospy.wait_for_service('/gazebo/reset_world')
+        try:
+            self.reset_world()
+        except (rospy.ServiceException) as e:
+            print ("/gazebo/reset_world service call failed")
+        """
 
         # Unpause simulation to make observation
         rospy.wait_for_service('/gazebo/unpause_physics')

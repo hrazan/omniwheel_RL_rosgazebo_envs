@@ -10,6 +10,16 @@
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+          </friction>
+        </surface>
       </collision>
       <visual name='Wall_1_Visual'>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -36,6 +46,16 @@
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+          </friction>
+        </surface>
       </collision>
       <visual name='Wall_2_Visual'>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -62,6 +82,16 @@
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+          </friction>
+        </surface>
       </collision>
       <visual name='Wall_3_Visual'>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -88,6 +118,16 @@
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+          </friction>
+        </surface>
       </collision>
       <visual name='Wall_4_Visual'>
         <pose frame=''>0 0 0.5 0 0 0</pose>

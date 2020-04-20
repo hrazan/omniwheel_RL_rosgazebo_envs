@@ -1,16 +1,26 @@
 <?xml version='1.0'?>
 <sdf version='1.5'>
-  <model name='project_obstacle'>
+  <model name='project_ball'>
     <pose frame=''>0 0 0 0 0 0</pose>
-    <link name='cylinder_obstacle'>
-      <collision name='cylinder_obstacle_Collision'>
+    <link name='ball'>
+      <inertial> 
+        <mass>1.0</mass>
+        <inertia> 
+          <ixx>0.016</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.016</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.016</izz>
+        </inertia>
+      </inertial>
+      <collision name='ball_Collision'>
         <geometry>
-          <cylinder>
+          <sphere>
             <radius>0.2</radius>
-            <length>0.5</length>
-          </cylinder>
+          </sphere>
         </geometry>
-        <pose frame=''>0 0 0.25 0 0 0</pose>
+        <pose frame=''>0 0 0.2 0 0 0</pose>
         <surface>
           <friction>
             <ode>
@@ -22,12 +32,11 @@
           </friction>
         </surface>
       </collision>
-      <visual name='cylinder_obstacle_Visual'>
+      <visual name='ball_Visual'>
         <geometry>
-          <cylinder>
+          <sphere>
             <radius>0.2</radius>
-            <length>0.5</length>
-          </cylinder>
+          </sphere>
         </geometry>
         <material>
           <script>
@@ -36,9 +45,9 @@
           </script>
           <ambient>1 1 1 1</ambient>
         </material>
-        <pose frame=''>0 0 0.25 0 0 0</pose>
+        <pose frame=''>0 0 0.2 0 0 0</pose>
       </visual>
     </link>
-    <static>1</static>
+    <static>0</static>
   </model>
 </sdf>
