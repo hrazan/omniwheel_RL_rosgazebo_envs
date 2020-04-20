@@ -1,0 +1,34 @@
+<?xml version='1.0'?>
+<sdf version='1.5'>
+  <model name='project_obstacle'>
+    <pose frame=''>0 0 0 0 0 0</pose>
+    <link name='cylinder_obstacle'>
+      <collision name='cylinder_obstacle_Collision'>
+        <geometry>
+          <cylinder>
+            <radius>0.2</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+        <pose frame=''>0 0 0.25 0 0 0</pose>
+      </collision>
+      <visual name='cylinder_obstacle_Visual'>
+        <geometry>
+          <cylinder>
+            <radius>0.2</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Grey</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <pose frame=''>0 0 0.25 0 0 0</pose>
+      </visual>
+    </link>
+    <static>1</static>
+  </model>
+</sdf>
