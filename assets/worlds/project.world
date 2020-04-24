@@ -22,7 +22,7 @@
     
     <physics type='ode'>
       <max_step_size>0.01</max_step_size>
-      <real_time_factor>25</real_time_factor><!--Q:25 DQN:25 MAX:1-->
+      <real_time_factor>25</real_time_factor><!--Q and DQN:25 MAX:1-->
       <real_time_update_rate>2500</real_time_update_rate><!--MAX:0-->
       <gravity>0 0 -9.8</gravity>
     </physics>
@@ -53,33 +53,78 @@
     </include>
     
     <!-- Obstacles -->
-    <population name="obstacles">
+    <!--population name="obstacles">
       <model name="obstacle">
         <include>
-          <uri>model://project_obstacle</uri>
+          <uri>model://project_ball</uri>
         </include>
       </model>
-      <pose>5 0 0 0 0 0</pose>
+      <pose>5.5 0 0 0 0 0</pose>
       <box>
-        <size>9 3 0.01</size>
+        <size>8 3 0.01</size>
       </box>
       <model_count>10</model_count>
       <distribution>
         <type>random</type>
       </distribution>
-    </population>
+    </population-->
     
-    <!-- A ball -->
+    <model name="obstacle_0">  
+			<include>
+			  <uri>model://project_ball</uri>
+			</include>
+		</model>
+		<model name="obstacle_1">  
+			<include>
+			  <uri>model://project_ball</uri>
+			</include>
+		</model>
+		<model name="obstacle_2">  
+			<include>
+			  <uri>model://project_ball</uri>
+			</include>
+		</model>
+		<model name="obstacle_3">  
+			<include>
+			  <uri>model://project_ball</uri>
+			</include>
+		</model>
+		<model name="obstacle_4">  
+			<include>
+			  <uri>model://project_ball</uri>
+			</include>
+		</model>
+		<model name="obstacle_5">  
+			<include>
+			  <uri>model://project_ball</uri>
+			</include>
+		</model>
+		<model name="obstacle_6">  
+			<include>
+			  <uri>model://project_ball</uri>
+			</include>
+		</model>
+		<model name="obstacle_7">  
+			<include>
+			  <uri>model://project_ball</uri>
+			</include>
+		</model>
+		<model name="obstacle_8">  
+			<include>
+			  <uri>model://project_ball</uri>
+			</include>
+		</model>
+		<model name="obstacle_9">  
+			<include>
+			  <uri>model://project_ball</uri>
+			</include>
+		</model>
+    
+    <!-- A ball >
     <include>
       <uri>model://project_ball</uri>
-      <pose>9.5 0 3 0 0 0</pose>
-    </include>
-    
-    <!-- A plate -->
-    <include>
-      <uri>model://project_plate</uri>
-      <pose>9.5 0 1.5 0 -0.15 0</pose>
-    </include>
+      <pose>9.5 0 1.8 0 0 0</pose>
+    </include-->
     
   </world>
 </sdf>

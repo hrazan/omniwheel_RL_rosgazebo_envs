@@ -29,13 +29,11 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         # Launch the simulation with the given launchfile name
         gazebo_env.GazeboEnv.__init__(self, "GazeboProject.launch")
         self.vel_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=5)
-        #self.before_pose = rospy.Publisher('/gazebo/before_model_states', Pose, queue_size=5)
         rospy.Subscriber('/gazebo/model_states', ModelStates, self.update_pose)
         rospy.Subscriber('/clock', Clock, self.sim_time)
         self.unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
         self.pause = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
         self.reset_proxy = rospy.ServiceProxy('/gazebo/reset_simulation', Empty)
-        self.reset_world = rospy.ServiceProxy('/gazebo/reset_world', Empty)
         
         self.reward_range = (-np.inf, np.inf)
         
@@ -56,8 +54,6 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         self.goalpose.y = 0.000 # map0,1: 0.0, map2: -0.25
         self.get_pose(self.beforepose)
         self.subgoal_as_dist_to_goal = 1000 # max. lidar's value
-        #self.beforepose.x = 0.0000
-        #self.beforepose.y = 0.0000
 
     # Set postion of the robot randomly
     def random_start(self):
@@ -73,6 +69,21 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
         except rospy.ServiceException, e:
             print("Service call failed: %s" %e)
 
+    def random_obstacle(self):
+        for n in range(0,10):
+		    state_msg = ModelState()
+		    state_msg.model_name = 'obstacle_'+str(n)
+		    state_msg.pose.position.x = random.randint(1,9)
+		    state_msg.pose.position.y = random.uniform(-1,1)
+		    state_msg.twist.linear.x = random.uniform(-0.3,0.3)
+		    state_msg.twist.linear.y = random.uniform(-0.3,0.3)
+		    rospy.wait_for_service('/gazebo/set_model_state')
+		    try:
+		        set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
+		        resp = set_state(state_msg)
+		    except rospy.ServiceException, e:
+		        print("Service call failed: %s" %e)
+
     def reset_vel(self):
         vel_cmd = Twist()
         vel_cmd.linear.x = 0.0
@@ -82,8 +93,6 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
 
     def sim_time(self, data):
         self.sim_time = data
-        #nsecs = data.clock.nsecs/1000000000
-        #self.sim_time = data.clock.secs + nsecs
 
     def get_pose(self, vector):
         vector.x = self.pose.x
@@ -304,6 +313,7 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
 
         #self.random_start()
         time.sleep(1)
+        self.random_obstacle()
 
         #read laser data
         data = None
