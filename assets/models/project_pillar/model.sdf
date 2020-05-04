@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <sdf version='1.5'>
-  <model name='project_obstacle'>
+  <model name='project_pillar'>
     <pose frame=''>0 0 0 0 0 0</pose>
     <link name='cylinder_obstacle'>
       <collision name='cylinder_obstacle_Collision'>
@@ -39,6 +39,6 @@
         <pose frame=''>0 0 0.25 0 0 0</pose>
       </visual>
     </link>
-    <static>1</static>
+    <static>0</static>
   </model>
 </sdf>

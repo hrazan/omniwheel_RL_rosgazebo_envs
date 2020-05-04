@@ -53,23 +53,8 @@
     </include>
     
     <!-- Obstacles -->
-    <!--population name="obstacles">
-      <model name="obstacle">
-        <include>
-          <uri>model://project_ball</uri>
-        </include>
-      </model>
-      <pose>5.5 0 0 0 0 0</pose>
-      <box>
-        <size>8 3 0.01</size>
-      </box>
-      <model_count>10</model_count>
-      <distribution>
-        <type>random</type>
-      </distribution>
-    </population-->
-    
-    <model name="obstacle_0">  
+    <!-- Balls -->
+    <!--model name="obstacle_0">  
 			<include>
 			  <uri>model://project_ball</uri>
 			</include>
@@ -93,38 +78,34 @@
 			<include>
 			  <uri>model://project_ball</uri>
 			</include>
-		</model>
-		<model name="obstacle_5">  
-			<include>
-			  <uri>model://project_ball</uri>
-			</include>
-		</model>
-		<model name="obstacle_6">  
-			<include>
-			  <uri>model://project_ball</uri>
-			</include>
-		</model>
-		<model name="obstacle_7">  
-			<include>
-			  <uri>model://project_ball</uri>
-			</include>
-		</model>
-		<model name="obstacle_8">  
-			<include>
-			  <uri>model://project_ball</uri>
-			</include>
-		</model>
-		<model name="obstacle_9">  
-			<include>
-			  <uri>model://project_ball</uri>
-			</include>
-		</model>
-    
-    <!-- A ball >
-    <include>
-      <uri>model://project_ball</uri>
-      <pose>9.5 0 1.8 0 0 0</pose>
-    </include-->
+		</model-->
+		
+	<!-- Pillars -->
+    <model name="obstacle_0">  
+	    <include>
+		    <uri>model://project_pillar</uri>
+		</include>
+	</model>
+	<model name="obstacle_1">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+	</model>
+	<model name="obstacle_2">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+	</model>
+	<model name="obstacle_3">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+	</model>
+	<model name="obstacle_4">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+	</model>
     
   </world>
 </sdf>

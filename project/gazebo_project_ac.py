@@ -62,8 +62,8 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         )
         """
         self.action_space = spaces.Box(
-            low = np.array([-0.3, -0.3, -1]),
-            high = np.array([0.3, 0.3, 1]),
+            low = np.array([-0.3, -0.3, -0.3]),
+            high = np.array([0.3, 0.3, 0.3]),
             dtype = np.float32
         )
 		
@@ -74,12 +74,19 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
     def _seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
-        
+
+    def reset_vel(self):
+        vel_cmd = Twist()
+        vel_cmd.linear.x = 0.0
+        vel_cmd.linear.y = 0.0
+        vel_cmd.angular.z = 0.0
+        self.vel_pub.publish(vel_cmd)
+
     # Set postion of the robot randomly
     def random_start(self):
         state_msg = ModelState()
         state_msg.model_name = 'robot'
-        state_msg.pose.position.x = random.randint(0,9)
+        state_msg.pose.position.x = 0
         state_msg.pose.position.y = random.uniform(-1,1)
 
         rospy.wait_for_service('/gazebo/set_model_state')
@@ -90,26 +97,20 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             print("Service call failed: %s" %e)
 
     def random_obstacle(self):
-        for n in range(0,10):
+        for n in range(0,5):
 		    state_msg = ModelState()
 		    state_msg.model_name = 'obstacle_'+str(n)
-		    state_msg.pose.position.x = random.randint(1,9)
+		    #state_msg.pose.position.x = random.randint(1,9)
+		    state_msg.pose.position.x = n+1
 		    state_msg.pose.position.y = random.uniform(-1,1)
-		    state_msg.twist.linear.x = random.uniform(-0.3,0.3)
-		    state_msg.twist.linear.y = random.uniform(-0.3,0.3)
+		    #state_msg.twist.linear.x = random.uniform(-0.3,0.3)
+		    #state_msg.twist.linear.y = random.uniform(-0.3,0.3)
 		    rospy.wait_for_service('/gazebo/set_model_state')
 		    try:
 		        set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
 		        resp = set_state(state_msg)
 		    except rospy.ServiceException, e:
 		        print("Service call failed: %s" %e)
-
-    def reset_vel(self):
-        vel_cmd = Twist()
-        vel_cmd.linear.x = 0.0
-        vel_cmd.linear.y = 0.0
-        vel_cmd.angular.z = 0.0
-        self.vel_pub.publish(vel_cmd)
 
     def sim_time(self, data):
         self.sim_time = data
@@ -120,8 +121,8 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
 
     def update_pose(self, data):
         try:
-            self.pose.x = round(data.pose[2].position.x, 4)
-            self.pose.y = round(data.pose[2].position.y, 4)
+            self.pose.x = round(data.pose[7].position.x, 4)
+            self.pose.y = round(data.pose[7].position.y, 4)
         except IndexError:
             None
 
@@ -158,9 +159,9 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         vel_cmd.angular.z = action[0][2]
         self.vel_pub.publish(vel_cmd)
 
-        time.sleep(0.02)
-        self.reset_vel()
-        self.action_time = ((self.sim_time.clock.secs - start.clock.secs)*1000000000) + (self.sim_time.clock.nsecs - start.clock.nsecs)
+        #time.sleep(0.02)
+        #self.reset_vel()
+        #self.action_time = ((self.sim_time.clock.secs - start.clock.secs)*1000000000) + (self.sim_time.clock.nsecs - start.clock.nsecs)
 
         data = None
         while data is None:
@@ -204,7 +205,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             self.reset_proxy()
         except (rospy.ServiceException) as e:
             print ("/gazebo/reset_simulation service call failed")
-
+        
         # Unpause simulation to make observation
         rospy.wait_for_service('/gazebo/unpause_physics')
         try:
@@ -213,10 +214,10 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/unpause_physics service call failed")
 
-        #self.random_start()
-        time.sleep(1)
+        self.random_start()
+        time.sleep(0.5)
         self.random_obstacle()
-
+        
         #read laser data
         data = None
         while data is None:
@@ -231,9 +232,8 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             self.pause()
         except (rospy.ServiceException) as e:
             print ("/gazebo/pause_physics service call failed")
-
+            
         state, done = self.calculate_observation(data)
-        self.before_avg_data = sum(state)/len(state)
 
         self.beforepose.x = self.pose.x
         self.beforepose.y = self.pose.y
