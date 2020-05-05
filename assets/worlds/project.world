@@ -54,34 +54,59 @@
     
     <!-- Obstacles -->
     <!-- Balls -->
-    <!--model name="obstacle_0">  
-			<include>
-			  <uri>model://project_ball</uri>
-			</include>
-		</model>
-		<model name="obstacle_1">  
-			<include>
-			  <uri>model://project_ball</uri>
-			</include>
-		</model>
-		<model name="obstacle_2">  
-			<include>
-			  <uri>model://project_ball</uri>
-			</include>
-		</model>
-		<model name="obstacle_3">  
-			<include>
-			  <uri>model://project_ball</uri>
-			</include>
-		</model>
-		<model name="obstacle_4">  
-			<include>
-			  <uri>model://project_ball</uri>
-			</include>
-		</model-->
+    <model name="obstacle_0">  
+		<include>
+			<uri>model://project_ball</uri>
+		</include>
+	</model>
+	<model name="obstacle_1">  
+		<include>
+			<uri>model://project_ball</uri>
+		</include>
+	</model>
+	<model name="obstacle_2">  
+		<include>
+			<uri>model://project_ball</uri>
+		</include>
+	</model>
+	<model name="obstacle_3">  
+		<include>
+			<uri>model://project_ball</uri>
+		</include>
+	</model>
+	<model name="obstacle_4">  
+		<include>
+			<uri>model://project_ball</uri>
+		</include>
+	</model>
+	<model name="obstacle_5">  
+		<include>
+			<uri>model://project_ball</uri>
+		</include>
+	</model>
+	<model name="obstacle_6">  
+		<include>
+			<uri>model://project_ball</uri>
+		</include>
+	</model>
+	<model name="obstacle_7">  
+		<include>
+			<uri>model://project_ball</uri>
+		</include>
+	</model>
+	<model name="obstacle_8">  
+		<include>
+			<uri>model://project_ball</uri>
+		</include>
+	</model>
+	<model name="obstacle_9">  
+		<include>
+			<uri>model://project_ball</uri>
+		</include>
+	</model>
 		
 	<!-- Pillars -->
-    <model name="obstacle_0">  
+    <!--model name="obstacle_0">  
 	    <include>
 		    <uri>model://project_pillar</uri>
 		</include>
@@ -106,6 +131,31 @@
 			<uri>model://project_pillar</uri>
 		</include>
 	</model>
+	<model name="obstacle_5">  
+	    <include>
+		    <uri>model://project_pillar</uri>
+		</include>
+	</model>
+	<model name="obstacle_6">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+	</model>
+	<model name="obstacle_7">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+	</model>
+	<model name="obstacle_8">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+	</model>
+	<model name="obstacle_9">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+	</model-->
     
   </world>
 </sdf>

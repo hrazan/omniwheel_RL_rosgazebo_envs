@@ -70,20 +70,23 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
             print("Service call failed: %s" %e)
 
     def random_obstacle(self):
-        for n in range(0,5):
-		    state_msg = ModelState()
-		    state_msg.model_name = 'obstacle_'+str(n)
-		    #state_msg.pose.position.x = random.randint(1,9)
-		    state_msg.pose.position.x = n+2
-		    state_msg.pose.position.y = random.uniform(-1,1)
-		    #state_msg.twist.linear.x = random.uniform(-0.3,0.3)
-		    #state_msg.twist.linear.y = random.uniform(-0.3,0.3)
-		    rospy.wait_for_service('/gazebo/set_model_state')
-		    try:
-		        set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
-		        resp = set_state(state_msg)
-		    except rospy.ServiceException, e:
-		        print("Service call failed: %s" %e)
+        for n in range(0,10):
+            state_msg = ModelState()
+            state_msg.model_name = 'obstacle_'+str(n)
+            #state_msg.pose.position.x = random.randint(1,9)
+            if n<5:
+                state_msg.pose.position.x = n+1
+            else:
+                state_msg.pose.position.x = 4-n
+            state_msg.pose.position.y = random.uniform(-1,1)
+            #state_msg.twist.linear.x = random.uniform(-0.3,0.3)
+            #state_msg.twist.linear.y = random.uniform(-0.3,0.3)
+            rospy.wait_for_service('/gazebo/set_model_state')
+            try:
+                set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
+                resp = set_state(state_msg)
+            except rospy.ServiceException, e:
+                print("Service call failed: %s" %e)
 
     def reset_vel(self):
         vel_cmd = Twist()
@@ -101,8 +104,8 @@ class ProjectNnEnv(gazebo_env.GazeboEnv):
 
     def update_pose(self, data):
         try:
-            self.pose.x = round(data.pose[7].position.x, 4)
-            self.pose.y = round(data.pose[7].position.y, 4)
+            self.pose.x = round(data.pose[12].position.x, 4)
+            self.pose.y = round(data.pose[12].position.y, 4)
         except IndexError:
             None
         #self.pose.pose.position.x = pose[2].position.x 
