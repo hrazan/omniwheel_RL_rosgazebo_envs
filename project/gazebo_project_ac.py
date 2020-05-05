@@ -161,11 +161,11 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         self.goal = False
 
         #start = self.sim_time
-
+        #print(action)
         vel_cmd = Twist()
-        vel_cmd.linear.x = action[0][0]
-        vel_cmd.linear.y = action[0][1]
-        vel_cmd.angular.z = action[0][2]
+        vel_cmd.linear.x = action[0]
+        vel_cmd.linear.y = action[1]
+        vel_cmd.angular.z = action[2]
         self.vel_pub.publish(vel_cmd)
         #print(action[0][0],action[0][1],action[0][2])
 
@@ -216,7 +216,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             print ("/gazebo/reset_simulation service call failed")
         
         #time.sleep(0.5)
-        time.sleep(1)
+        #time.sleep(1)
         self.random_obstacle()
         
         # Unpause simulation to make observation
@@ -227,7 +227,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/unpause_physics service call failed")
 
-        #time.sleep(0.5)
+        time.sleep(1)
         #self.random_start()
         
         #read laser data
