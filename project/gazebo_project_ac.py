@@ -64,7 +64,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             dtype = np.float32
         )
 		
-        self.observation_space = spaces.Box(low = 0, high = 20, shape=(109,), dtype = np.float32)
+        self.observation_space = spaces.Box(low = 0, high = 20, shape=(109,), dtype=np.float32)
 		
         self._seed()
 
@@ -199,7 +199,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         else:
             reward = 0.01
             
-        reward = np.array(reward).reshape((1,))
+        #reward = np.array(reward).reshape((1,))
 
         self.beforepose.x = self.pose.x
         self.beforepose.y = self.pose.y
