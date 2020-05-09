@@ -14,7 +14,6 @@ from std_srvs.srv import Empty
 
 from gazebo_msgs.msg import ModelState, ModelStates
 from turtlesim.msg import Pose
-from rosgraph_msgs.msg import Clock
 
 from gazebo_msgs.srv import SetModelState
 
@@ -29,19 +28,15 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         gazebo_env.GazeboEnv.__init__(self, "GazeboProject.launch")
         self.vel_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=5)
         rospy.Subscriber('/gazebo/model_states', ModelStates, self.update_pose)
-        rospy.Subscriber('/clock', Clock, self.sim_time)
         self.unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
         self.pause = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
         self.reset_proxy = rospy.ServiceProxy('/gazebo/reset_simulation', Empty)
         
-        self.sim_time = Clock()
         self.action_time = 0.00000
         self.pose = Pose()
         self.goalpose = Pose()
         self.beforepose = Pose()
         self.startpose = Pose()
-
-        self.before_avg_data = 0
 
         self.goal = False
 
@@ -99,10 +94,10 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             state_msg = ModelState()
             state_msg.model_name = 'obstacle_'+str(n)
             #state_msg.pose.position.x = random.randint(1,9)
-            if n<5:
+            if n<8:
                 state_msg.pose.position.x = n+1
             else:
-                state_msg.pose.position.x = 4-n
+                state_msg.pose.position.x = 7-n
             state_msg.pose.position.y = random.uniform(-1,1)
             state_msg.twist.linear.x = 0.0
             state_msg.twist.linear.y = 0.0
@@ -144,7 +139,6 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
                 state_list += [data.ranges[i]]
             else:
                 state_list += [20]
-                #print('ERROR: INFINITY!')
         distance = self.euclidean_distance(self.pose, self.goalpose)
         state_list += [distance]
         state_tuple = tuple(state_list)
@@ -160,18 +154,11 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
 
         self.goal = False
 
-        #start = self.sim_time
-        #print(action)
         vel_cmd = Twist()
         vel_cmd.linear.x = action[0]
         vel_cmd.linear.y = action[1]
         vel_cmd.angular.z = action[2]
         self.vel_pub.publish(vel_cmd)
-        #print(action[0][0],action[0][1],action[0][2])
-
-        time.sleep(0.01)
-        self.reset_vel()
-        #self.action_time = ((self.sim_time.clock.secs - start.clock.secs)*1000000000) + (self.sim_time.clock.nsecs - start.clock.nsecs)
 
         data = None
         while data is None:
@@ -179,7 +166,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
                 data = rospy.wait_for_message('/scan', LaserScan, timeout=5)
             except:
                 pass
-
+ 
         rospy.wait_for_service('/gazebo/pause_physics')
         try:
             self.pause()
@@ -198,9 +185,8 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             else: reward = 0.1
         else:
             reward = 0.01
-            
-        #reward = np.array(reward).reshape((1,))
 
+        
         self.beforepose.x = self.pose.x
         self.beforepose.y = self.pose.y
         
@@ -215,8 +201,6 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/reset_simulation service call failed")
         
-        #time.sleep(0.5)
-        #time.sleep(1)
         self.random_obstacle()
         
         # Unpause simulation to make observation
@@ -248,6 +232,6 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
 
         self.beforepose.x = self.pose.x
         self.beforepose.y = self.pose.y
-        self.subgoal_as_dist_to_goal = 1000
+        self.subgoal_as_dist_to_goal = 20
 
         return np.asarray(state)
