@@ -121,6 +121,8 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         try:
             self.pose.x = round(data.pose[12].position.x, 4)
             self.pose.y = round(data.pose[12].position.y, 4)
+            #self.pose.theta = round(data.pose[12].orientation.w, 4)
+            #print self.pose.theta
         except IndexError:
             None
 
