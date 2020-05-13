@@ -178,17 +178,17 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         state, done = self.calculate_observation(data)
         avg_data = sum(state)/len(state)
 
-        distance = self.euclidean_distance(self.pose, self.goalpose)
+        cur_distance = self.euclidean_distance(self.pose, self.goalpose)
+        prev_distance = self.euclidean_distance(self.beforepose, self.goalpose)
 
         if not done:
-            if  distance < self.euclidean_distance(self.beforepose, self.goalpose) and distance < self.subgoal_as_dist_to_goal :
-                reward = 100/distance
-                self.subgoal_as_dist_to_goal = distance
-            else: reward = 0.1
+            reward = prev_distance - cur_distance
+            if cur_distance < self.subgoal_as_dist_to_goal :
+                reward += self.subgoal_as_dist_to_goal - cur_distance
+                self.subgoal_as_dist_to_goal = cur_distance
         else:
-            reward = 0.01
-
-        
+            reward = -10
+    
         self.beforepose.x = self.pose.x
         self.beforepose.y = self.pose.y
         
