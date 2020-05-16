@@ -4,6 +4,7 @@ import roslaunch
 import time
 import numpy as np
 import random
+import tf
 
 from math import pow, atan2, sqrt, exp
 
@@ -58,8 +59,11 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             high = np.array([0.3, 0.3, 0.3]),
             dtype = np.float32
         )
-		
-        self.observation_space = spaces.Box(low = 0, high = 20, shape=(109,), dtype=np.float32)
+        
+        """
+        shape(lidar sensors + distance,)
+        """
+        self.observation_space = spaces.Box(low = 0, high = 20, shape=(12,), dtype=np.float32)
 		
         self._seed()
 
@@ -121,8 +125,9 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         try:
             self.pose.x = round(data.pose[12].position.x, 4)
             self.pose.y = round(data.pose[12].position.y, 4)
-            #self.pose.theta = round(data.pose[12].orientation.w, 4)
-            #print self.pose.theta
+            quaternion = (round(data.pose[12].orientation.x, 4), round(data.pose[12].orientation.y, 4), round(data.pose[12].orientation.z, 4), round(data.pose[12].orientation.w, 4))
+            self.pose.theta = tf.transformations.euler_from_quaternion(quaternion)[2]
+            print self.pose.theta
         except IndexError:
             None
 
@@ -133,14 +138,16 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
     def calculate_observation(self,data):
         min_range = 0.301
         done = False
+        laser_used = self.observation_space.shape[0]-1
         state_list = []
         for i, item in enumerate(data.ranges):
-            if not np.isinf(data.ranges[i]):    
-                if (min_range > data.ranges[i] > 0):
-                    done = True
-                state_list += [data.ranges[i]]
-            else:
-                state_list += [20]
+            if (i==0) or (((i+1)%(len(data.ranges)/(laser_used-1)))==0):
+                if not np.isinf(data.ranges[i]):    
+                    if (min_range > data.ranges[i] > 0):
+                        done = True
+                    state_list += [data.ranges[i]]
+                else:
+                    state_list += [30]
         distance = self.euclidean_distance(self.pose, self.goalpose)
         state_list += [distance]
         state_tuple = tuple(state_list)
