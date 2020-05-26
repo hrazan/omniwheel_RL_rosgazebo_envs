@@ -22,8 +22,8 @@
     
     <physics type='ode'>
       <max_step_size>0.01</max_step_size>
-      <real_time_factor>25</real_time_factor><!--Q and DQN:25 MAX:1-->
-      <real_time_update_rate>2500</real_time_update_rate><!--MAX:0 real_time_factor*100 -->
+      <real_time_factor>50</real_time_factor><!--Q and DQN:25 MAX:1-->
+      <real_time_update_rate>5000</real_time_update_rate><!--MAX:0 real_time_factor*100 -->
       <gravity>0 0 -9.8</gravity>
     </physics>
     
@@ -54,108 +54,118 @@
     
     <!-- Obstacles -->
     <!-- Balls -->
-    <model name="obstacle_0">  
-		<include>
-			<uri>model://project_ball</uri>
-		</include>
-	</model>
-	<model name="obstacle_1">  
-		<include>
-			<uri>model://project_ball</uri>
-		</include>
-	</model>
-	<model name="obstacle_2">  
-		<include>
-			<uri>model://project_ball</uri>
-		</include>
-	</model>
-	<model name="obstacle_3">  
-		<include>
-			<uri>model://project_ball</uri>
-		</include>
-	</model>
-	<model name="obstacle_4">  
-		<include>
-			<uri>model://project_ball</uri>
-		</include>
-	</model>
-	<model name="obstacle_5">  
-		<include>
-			<uri>model://project_ball</uri>
-		</include>
-	</model>
-	<model name="obstacle_6">  
-		<include>
-			<uri>model://project_ball</uri>
-		</include>
-	</model>
-	<model name="obstacle_7">  
-		<include>
-			<uri>model://project_ball</uri>
-		</include>
-	</model>
-	<model name="obstacle_8">  
-		<include>
-			<uri>model://project_ball</uri>
-		</include>
-	</model>
-	<model name="obstacle_9">  
-		<include>
-			<uri>model://project_ball</uri>
-		</include>
-	</model>
-		
-	<!-- Pillars -->
     <!--model name="obstacle_0">  
-	    <include>
-		    <uri>model://project_pillar</uri>
+		<include>
+			<uri>model://project_ball</uri>
 		</include>
 	</model>
 	<model name="obstacle_1">  
 		<include>
-			<uri>model://project_pillar</uri>
+			<uri>model://project_ball</uri>
 		</include>
 	</model>
 	<model name="obstacle_2">  
 		<include>
-			<uri>model://project_pillar</uri>
+			<uri>model://project_ball</uri>
 		</include>
 	</model>
 	<model name="obstacle_3">  
 		<include>
-			<uri>model://project_pillar</uri>
+			<uri>model://project_ball</uri>
 		</include>
 	</model>
 	<model name="obstacle_4">  
 		<include>
-			<uri>model://project_pillar</uri>
+			<uri>model://project_ball</uri>
 		</include>
 	</model>
 	<model name="obstacle_5">  
-	    <include>
-		    <uri>model://project_pillar</uri>
+		<include>
+			<uri>model://project_ball</uri>
 		</include>
 	</model>
 	<model name="obstacle_6">  
 		<include>
-			<uri>model://project_pillar</uri>
+			<uri>model://project_ball</uri>
 		</include>
 	</model>
 	<model name="obstacle_7">  
 		<include>
-			<uri>model://project_pillar</uri>
+			<uri>model://project_ball</uri>
 		</include>
 	</model>
 	<model name="obstacle_8">  
 		<include>
-			<uri>model://project_pillar</uri>
+			<uri>model://project_ball</uri>
 		</include>
 	</model>
 	<model name="obstacle_9">  
 		<include>
-			<uri>model://project_pillar</uri>
+			<uri>model://project_ball</uri>
 		</include>
 	</model-->
+		
+	<!-- Pillars -->
+    <model name="obstacle_0">  
+	    <include>
+		    <uri>model://project_pillar</uri>
+		</include>
+		<pose>1 0.75 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_1">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+		<pose>2 -0.75 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_2">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+		<pose>3 0 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_3">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+		<pose>4 1 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_4">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+		<pose>4 -1 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_5">  
+	    <include>
+		    <uri>model://project_pillar</uri>
+		</include>
+		<pose>5 0.5 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_6">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+		<pose>6 -0.75 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_7">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+		<pose>7 0 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_8">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+		<pose>-1 -0.5 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_9">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+		<pose>-2 1 0 0 0 0</pose>
+	</model>
     
   </world>
 </sdf>
