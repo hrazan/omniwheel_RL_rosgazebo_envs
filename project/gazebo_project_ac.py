@@ -53,7 +53,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             dtype = np.float32
         )
         """
-        """
+        
         self.action_space = spaces.Box(
             low = np.array([0.0, -0.3, -0.3]),
             high = np.array([0.3, 0.3, 0.3]),
@@ -65,7 +65,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             high = np.array([0.3, 0.3]),
             dtype = np.float32
         )
-        
+        """
         """
         shape(lidar sensors + distance + angle,)
         """
@@ -132,7 +132,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             self.pose.x = round(data.pose[self.robot_id].position.x, 4)
             self.pose.y = round(data.pose[self.robot_id].position.y, 4)
             quaternion = (round(data.pose[self.robot_id].orientation.x, 4), round(data.pose[self.robot_id].orientation.y, 4), round(data.pose[self.robot_id].orientation.z, 4), round(data.pose[self.robot_id].orientation.w, 4))
-            yaw = round((tf.transformations.euler_from_quaternion(quaternion)[2]), 4)
+            self.pose.theta = round((tf.transformations.euler_from_quaternion(quaternion)[2]), 4)
             """
             yaw = round((tf.transformations.euler_from_quaternion(quaternion)[2]*180/pi), 4)
             #yaw = [0.0001,360]
@@ -221,7 +221,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         
         """state_list += [round(distance/30, 4), round(direction_to_target_deg/360, 4)] #, self.subgoal_as_dist_to_goal]"""
         state_list += [round(distance/30, 4), round(direction_to_target_pi_rad, 4)] #, self.subgoal_as_dist_to_goal]
-        #print body_to_target_degree, direction_to_target_deg
+        #print body_to_target_pi_rad, direction_to_target_pi_rad
         state_tuple = tuple(state_list)
         return state_tuple, done
 
@@ -237,9 +237,9 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
 
         vel_cmd = Twist()
         vel_cmd.linear.x = action[0]
-        #vel_cmd.linear.y = action[1]
-        #vel_cmd.angular.z = action[2]
-        vel_cmd.angular.z = action[1]
+        vel_cmd.linear.y = action[1]
+        vel_cmd.angular.z = action[2]
+        #vel_cmd.angular.z = action[1]
         self.vel_pub.publish(vel_cmd)
 
         time.sleep(0.01)
