@@ -69,7 +69,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         """
         shape(lidar sensors + distance + angle,)
         """
-        self.observation_space = spaces.Box(low = 0, high = 20, shape=(12,), dtype=np.float32)
+        self.observation_space = spaces.Box(low = -1, high = 1, shape=(13,), dtype=np.float32)
 		
         self._seed()
 
@@ -208,19 +208,23 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             direction_to_target_deg = 360 - (self.pose.theta - body_to_target_degree)
         """
         body_to_target_pi_rad = self.euclidean_degree(self.pose, self.goalpose)
+        """
         direction_to_target_pi_rad = body_to_target_pi_rad - self.pose.theta
         if (direction_to_target_pi_rad > 1):
             direction_to_target_pi_rad += -2
         elif (direction_to_target_pi_rad < -1):
             direction_to_target_pi_rad += 2
-        
+        """
         cur_distance = self.euclidean_distance(self.pose, self.goalpose)
         if cur_distance < self.subgoal_as_dist_to_goal :
             self.subgoal_as_dist_to_goal = cur_distance
             self.update_subgoal = True
-        
+            
         """state_list += [round(distance/30, 4), round(direction_to_target_deg/360, 4)] #, self.subgoal_as_dist_to_goal]"""
-        state_list += [round(distance/30, 4), round(direction_to_target_pi_rad, 4)] #, self.subgoal_as_dist_to_goal]
+        
+        #state_list += [round(distance/30, 4), round(direction_to_target_pi_rad, 4)] #, self.subgoal_as_dist_to_goal]
+        
+        state_list += [round(distance/30, 4), round(body_to_target_pi_rad, 4), self.pose.theta]
         #print body_to_target_pi_rad, direction_to_target_pi_rad
         state_tuple = tuple(state_list)
         return state_tuple, done
