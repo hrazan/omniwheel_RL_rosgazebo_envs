@@ -60,16 +60,9 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             dtype = np.float32
         )
         """
-        self.action_space = spaces.Box(
-            low = np.array([0.0, -0.3]),
-            high = np.array([0.3, 0.3]),
-            dtype = np.float32
-        )
-        """
-        """
         shape(lidar sensors + distance + angle,)
         """
-        self.observation_space = spaces.Box(low = -1, high = 1, shape=(13,), dtype=np.float32)
+        self.observation_space = spaces.Box(low = -1, high = 1, shape=(12,), dtype=np.float32)
 		
         self._seed()
 
@@ -132,8 +125,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             self.pose.x = round(data.pose[self.robot_id].position.x, 4)
             self.pose.y = round(data.pose[self.robot_id].position.y, 4)
             quaternion = (round(data.pose[self.robot_id].orientation.x, 4), round(data.pose[self.robot_id].orientation.y, 4), round(data.pose[self.robot_id].orientation.z, 4), round(data.pose[self.robot_id].orientation.w, 4))
-            yaw = tf.transformations.euler_from_quaternion(quaternion)[2]
-            self.pose.theta = round((yaw + 1)/2, 4)
+            self.pose.theta = round(tf.transformations.euler_from_quaternion(quaternion)[2]/pi, 4)
         except IndexError:
             None
 
@@ -142,30 +134,19 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         return round(sqrt(pow((goal_pose.x - now_pose.x), 2) + pow((goal_pose.y - now_pose.y), 2)),4)
 
     def euclidean_angle(self, now_pose, goal_pose):
+        #angle = [-pi,pi] = [-1,1]
         pi_rad = np.arcsin((goal_pose.y - now_pose.y)/self.euclidean_distance(now_pose, goal_pose))
         if (goal_pose.x - now_pose.x) < 0:
             if pi_rad >= 0:
-                pi_rad += pi/2 - pi_rad
+                pi_rad = pi - pi_rad
             else:
-                pi_rad += -(pi/2) - pi_rad
-        normalized_angle = round((pi_rad + 1)/2,4)
-        return normalized_angle
+                pi_rad += -pi
+        return round(pi_rad/pi, 4)
     
     def calculate_observation(self,data):
         min_range = 0.301
         done = False
         state_list = []
-        """
-        laser_used = self.observation_space.shape[0]-1
-        for i, item in enumerate(data.ranges):
-            if (i==0) or (((i+1)%(len(data.ranges)/(laser_used-1)))==0):
-                if not np.isinf(data.ranges[i]):    
-                    if (min_range > data.ranges[i] > 0):
-                        done = True
-                    state_list += [data.ranges[i]]
-                else:
-                    state_list += [30]
-        """
         for i, item in enumerate(data.ranges):
             if not np.isinf(data.ranges[i]):    
                 if (min_range > data.ranges[i] > 0):
@@ -175,19 +156,22 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
                 state_list += [1.0000]
                 
         cur_distance = min(self.euclidean_distance(self.pose, self.goalpose),30)
-        body_to_target_pi_rad = self.euclidean_angle(self.pose, self.goalpose)
-        """
-        direction_to_target_pi_rad = body_to_target_pi_rad - self.pose.theta
-        if (direction_to_target_pi_rad > 1):
-            direction_to_target_pi_rad += -2
-        elif (direction_to_target_pi_rad < -1):
-            direction_to_target_pi_rad += 2
-        """
+        body_to_target_angle = self.euclidean_angle(self.pose, self.goalpose)
+        
+        direction_to_target_angle = body_to_target_angle - self.pose.theta
+        if (direction_to_target_angle > 1):
+            direction_to_target_angle += -2
+        elif (direction_to_target_angle < -1):
+            direction_to_target_angle += 2
+        elif direction_to_target_angle == 1 or direction_to_target_angle == -1:
+            direction_to_target_angle = 1
+        
+        cur_distance = self.euclidean_distance(self.pose, self.goalpose)
         if cur_distance < self.subgoal_as_dist_to_goal :
             self.subgoal_as_dist_to_goal = cur_distance
             self.update_subgoal = True
             
-        state_list += [round(cur_distance/30, 4), body_to_target_pi_rad, self.pose.theta]
+        state_list += [round(cur_distance/30, 4), round(direction_to_target_angle, 4)]
         #print body_to_target_pi_rad, direction_to_target_pi_rad
         state_tuple = tuple(state_list)
         return state_tuple, done
@@ -206,6 +190,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         vel_cmd.linear.x = action[0]
         vel_cmd.linear.y = action[1]
         vel_cmd.angular.z = action[2]
+        #vel_cmd.angular.z = action[1]
         self.vel_pub.publish(vel_cmd)
 
         time.sleep(0.01)
@@ -282,3 +267,4 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         self.subgoal_as_dist_to_goal = self.euclidean_distance(self.pose, self.goalpose)
 
         return np.asarray(state)
+
