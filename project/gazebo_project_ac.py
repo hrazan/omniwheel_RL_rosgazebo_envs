@@ -38,9 +38,9 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
 
         self.goal = False
         self.update_subgoal = False
-        self.robot_id = 12
+        self.robot_id = 2
 
-        self.goalpose.x = 15.000
+        self.goalpose.x = 9.000
         self.goalpose.y = 0.000
         self.get_pose(self.beforepose)
         self.subgoal_as_dist_to_goal = 30 # max. lidar's value
@@ -122,16 +122,16 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
 
     def update_pose(self, data):
         try:
-            self.pose.x = round(data.pose[self.robot_id].position.x, 4)
-            self.pose.y = round(data.pose[self.robot_id].position.y, 4)
-            quaternion = (round(data.pose[self.robot_id].orientation.x, 4), round(data.pose[self.robot_id].orientation.y, 4), round(data.pose[self.robot_id].orientation.z, 4), round(data.pose[self.robot_id].orientation.w, 4))
-            self.pose.theta = round(tf.transformations.euler_from_quaternion(quaternion)[2]/pi, 4)
+            self.pose.x = data.pose[self.robot_id].position.x
+            self.pose.y = data.pose[self.robot_id].position.y
+            quaternion = (data.pose[self.robot_id].orientation.x, data.pose[self.robot_id].orientation.y, data.pose[self.robot_id].orientation.z, data.pose[self.robot_id].orientation.w)
+            self.pose.theta = tf.transformations.euler_from_quaternion(quaternion)[2]/pi
         except IndexError:
             None
 
     def euclidean_distance(self, now_pose, goal_pose):
         """Euclidean distance between current pose and the goal"""
-        return round(sqrt(pow((goal_pose.x - now_pose.x), 2) + pow((goal_pose.y - now_pose.y), 2)),4)
+        return sqrt(pow((goal_pose.x - now_pose.x), 2) + pow((goal_pose.y - now_pose.y), 2))
 
     def euclidean_angle(self, now_pose, goal_pose):
         #angle = [-pi,pi] = [-1,1]
@@ -141,7 +141,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
                 pi_rad = pi - pi_rad
             else:
                 pi_rad += -pi
-        return round(pi_rad/pi, 4)
+        return pi_rad/pi
     
     def calculate_observation(self,data):
         min_range = 0.301
@@ -151,9 +151,9 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             if not np.isinf(data.ranges[i]):    
                 if (min_range > data.ranges[i] > 0):
                     done = True
-                state_list += [round(data.ranges[i]/30, 4)]
+                state_list += [data.ranges[i]/30]
             else:
-                state_list += [1.0000]
+                state_list += [1.0]
                 
         cur_distance = min(self.euclidean_distance(self.pose, self.goalpose),30)
         body_to_target_angle = self.euclidean_angle(self.pose, self.goalpose)
@@ -171,8 +171,8 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             self.subgoal_as_dist_to_goal = cur_distance
             self.update_subgoal = True
             
-        state_list += [round(cur_distance/30, 4), round(direction_to_target_angle, 4)]
-        #print body_to_target_pi_rad, direction_to_target_pi_rad
+        state_list += [cur_distance/30, direction_to_target_angle]
+        #print direction_to_target_angle
         state_tuple = tuple(state_list)
         return state_tuple, done
 

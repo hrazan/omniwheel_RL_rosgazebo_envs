@@ -106,6 +106,7 @@
 	</model-->
 		
 	<!-- Pillars -->
+	<!--
     <model name="obstacle_0">  
 	    <include>
 		    <uri>model://project_pillar</uri>
@@ -165,7 +166,7 @@
 			<uri>model://project_pillar</uri>
 		</include>
 		<pose>-2 1 0 0 0 0</pose>
-	</model>
+	</model>-->
     
   </world>
 </sdf>
