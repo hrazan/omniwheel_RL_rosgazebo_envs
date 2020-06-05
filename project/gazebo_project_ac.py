@@ -44,6 +44,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         self.goalpose.y = 0.000
         self.get_pose(self.beforepose)
         self.subgoal_as_dist_to_goal = 30 # max. lidar's value
+        self.target_angle = 0
 
 		# Action space design
         """
@@ -55,7 +56,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         """
         
         self.action_space = spaces.Box(
-            low = np.array([0.0, -0.3, -0.3]),
+            low = np.array([-0.3, -0.3, -0.3]),
             high = np.array([0.3, 0.3, 0.3]),
             dtype = np.float32
         )
@@ -84,6 +85,20 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         state_msg.pose.position.x = 0
         state_msg.pose.position.y = random.uniform(-1,1)
         state_msg.pose.position.z = 0.1
+
+        rospy.wait_for_service('/gazebo/set_model_state')
+        try:
+            set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
+            resp = set_state(state_msg)
+        except rospy.ServiceException, e:
+            print("Service call failed: %s" %e)
+    
+    def start(self):
+        state_msg = ModelState()
+        state_msg.model_name = 'robot'
+        quaternion = tf.transformations.quaternion_from_euler(0,0,-pi/4)
+        state_msg.pose.orientation.z = quaternion[2]
+        state_msg.pose.orientation.w = quaternion[3]
 
         rospy.wait_for_service('/gazebo/set_model_state')
         try:
@@ -125,7 +140,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             self.pose.x = data.pose[self.robot_id].position.x
             self.pose.y = data.pose[self.robot_id].position.y
             quaternion = (data.pose[self.robot_id].orientation.x, data.pose[self.robot_id].orientation.y, data.pose[self.robot_id].orientation.z, data.pose[self.robot_id].orientation.w)
-            self.pose.theta = tf.transformations.euler_from_quaternion(quaternion)[2]/pi
+            self.pose.theta = (tf.transformations.euler_from_quaternion(quaternion)[2]/pi)+0.25
         except IndexError:
             None
 
@@ -170,8 +185,9 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         if cur_distance < self.subgoal_as_dist_to_goal :
             self.subgoal_as_dist_to_goal = cur_distance
             self.update_subgoal = True
-            
-        state_list += [cur_distance/30, direction_to_target_angle]
+        
+        self.target_angle = direction_to_target_angle  
+        state_list += [cur_distance/30, self.target_angle]
         #print direction_to_target_angle
         state_tuple = tuple(state_list)
         return state_tuple, done
@@ -190,7 +206,6 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         vel_cmd.linear.x = action[0]
         vel_cmd.linear.y = action[1]
         vel_cmd.angular.z = action[2]
-        #vel_cmd.angular.z = action[1]
         self.vel_pub.publish(vel_cmd)
 
         time.sleep(0.01)
@@ -215,7 +230,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         prev_distance = self.euclidean_distance(self.beforepose, self.goalpose)
 
         if not done:
-            reward = (prev_distance - cur_distance)*10
+            reward = (1-abs(self.target_angle))*(prev_distance - cur_distance)*10
         else:
             reward = -10
         
@@ -243,6 +258,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/unpause_physics service call failed")
 
+        self.start()
         time.sleep(1)
         #self.random_start()
         
