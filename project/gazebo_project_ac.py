@@ -230,7 +230,11 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         prev_distance = self.euclidean_distance(self.beforepose, self.goalpose)
 
         if not done:
-            reward = (1-abs(self.target_angle))*(prev_distance - cur_distance)*10
+            reward = (prev_distance - cur_distance)*5
+            if reward < 0:
+                reward *= (1+abs(self.target_angle))
+            else:
+                reward *= (2-abs(self.target_angle))
         else:
             reward = -10
         
