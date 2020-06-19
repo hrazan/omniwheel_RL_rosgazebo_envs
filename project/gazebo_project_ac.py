@@ -38,13 +38,14 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
 
         self.goal = False
         self.update_subgoal = False
-        self.robot_id = 2
+        self.robot_id = 13
 
         self.goalpose.x = 9.000
         self.goalpose.y = 0.000
         self.get_pose(self.beforepose)
         self.subgoal_as_dist_to_goal = 30 # max. lidar's value
         self.target_angle = 0
+        self.start_mode = None
 
 		# Action space design
         """
@@ -71,6 +72,10 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
+    def set_start_mode(self, mode):
+        # mode = "random" or "static"
+        self.start_mode = mode
+
     def reset_vel(self):
         vel_cmd = Twist()
         vel_cmd.linear.x = 0.0
@@ -82,9 +87,12 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
     def random_start(self):
         state_msg = ModelState()
         state_msg.model_name = 'robot'
-        state_msg.pose.position.x = 0
+        state_msg.pose.position.x = random.randint(-2,2) + 0.5
         state_msg.pose.position.y = random.uniform(-1,1)
         state_msg.pose.position.z = 0.1
+        quaternion = tf.transformations.quaternion_from_euler(0,0,random.uniform(-pi,pi))
+        state_msg.pose.orientation.z = quaternion[2]
+        state_msg.pose.orientation.w = quaternion[3]
 
         rospy.wait_for_service('/gazebo/set_model_state')
         try:
@@ -262,9 +270,9 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/unpause_physics service call failed")
 
-        self.start()
+        if self.start_mode == 'random': self.random_start()
+        elif self.start_mode == 'static': self.start()
         time.sleep(1)
-        #self.random_start()
         
         #read laser data
         data = None
