@@ -49,13 +49,17 @@ class ProjectEnv(gazebo_env.GazeboEnv):
         self._seed()
 
         self.goal = False
+        self.randomstart = False
 
-        self.goalpose.x = 2.000 # map0: 1.5, map1: 1.25, map2: 2.0
-        self.goalpose.y = -0.250 # map0,1: 0.0, map2: -0.25
+        self.goalpose.x = 1.500 # map0: 1.5, map1: 1.25, map2: 2.0
+        self.goalpose.y = 0.000 # map0,1: 0.0, map2: -0.25
         self.get_pose(self.beforepose)
         #self.beforepose.x = 0.0000
         #self.beforepose.y = 0.0000
 
+    def set_randomstart(self, set_bool):
+        self.randomstart = set_bool
+    
     # Set postion of the robot randomly
     def random_start(self):
         state_msg = ModelState()
@@ -67,9 +71,23 @@ class ProjectEnv(gazebo_env.GazeboEnv):
         else:
             state_msg.pose.position.x = 1.00+(0.25*random.randint(1,3))
         """
+        area = random.randint(1,3)
+        if area == 1:
+            state_msg.pose.position.x = random.uniform(-0.4,0.4)
+            state_msg.pose.position.y = random.uniform(-1.15,0.35)
+        elif area == 2:
+            state_msg.pose.position.x = random.uniform(-0.4,1.9)
+            state_msg.pose.position.y = random.uniform(0.35,1.15)
+        else:
+            state_msg.pose.position.x = random.uniform(1.1,1.9)
+            state_msg.pose.position.y = random.uniform(-1.15,0.35)
+            
+        
         # MAP 2
+        """
         state_msg.pose.position.x = random.randint(0,2)
         state_msg.pose.position.y = -1.25+(0.25*random.randint(1,9))
+        """
 
         rospy.wait_for_service('/gazebo/set_model_state')
         try:
@@ -133,7 +151,7 @@ class ProjectEnv(gazebo_env.GazeboEnv):
             else:
                 state_data_average.append(data.ranges[i])
 
-            if ((i+1)%6 == 0):
+            if (i == 0 or (i+1)%270 == 0):
                 state_data = sum(state_data_average)/len(state_data_average)
 
                 if (state_data<=0.25): state_data_char = '0'
@@ -160,8 +178,9 @@ class ProjectEnv(gazebo_env.GazeboEnv):
             if (min_range > data.ranges[i] > 0):
                 done = True
 
-            #print(done)
-            #print(discretized_ranges)
+        #print(done)
+        #print(discretized_ranges)
+        
         return discretized_ranges, done
 
     def _seed(self, seed=None):
@@ -273,7 +292,7 @@ class ProjectEnv(gazebo_env.GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/unpause_physics service call failed")
 
-        #self.random_start()
+        if self.randomstart: self.random_start()
         time.sleep(1.5) #DQN25x=3,Q25x=1.5
 
         #read laser data

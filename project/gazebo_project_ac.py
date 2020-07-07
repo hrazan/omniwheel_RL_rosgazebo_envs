@@ -38,7 +38,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
 
         self.goal = False
         self.update_subgoal = False
-        self.robot_id = 13
+        self.robot_id = 12
 
         self.goalpose.x = 9.000
         self.goalpose.y = 0.000
