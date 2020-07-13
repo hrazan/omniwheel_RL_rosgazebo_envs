@@ -101,7 +101,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         except rospy.ServiceException, e:
             print("Service call failed: %s" %e)
     
-    def start(self):
+    def static_start(self):
         state_msg = ModelState()
         state_msg.model_name = 'robot'
         quaternion = tf.transformations.quaternion_from_euler(0,0,-pi/4)
@@ -271,7 +271,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             print ("/gazebo/unpause_physics service call failed")
 
         if self.start_mode == 'random': self.random_start()
-        elif self.start_mode == 'static': self.start()
+        elif self.start_mode == 'static': self.static_start()
         time.sleep(1)
         
         #read laser data
