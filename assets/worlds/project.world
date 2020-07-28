@@ -172,6 +172,37 @@
 		</include>
 		<pose>0 -0.5 0 0 0 0</pose>
 	</model-->
+	<!-- Pillars (Test) -->
+    <!--model name="obstacle_0">  
+	    <include>
+		    <uri>model://project_pillar</uri>
+		</include>
+		<pose>1 1 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_1">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+		<pose>2 -0.1 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_2">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+		<pose>3 1 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_3">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+		<pose>4 -0.75 0 0 0 0</pose>
+	</model>
+	<model name="obstacle_4">  
+		<include>
+			<uri>model://project_pillar</uri>
+		</include>
+		<pose>5 -1 0 0 0 0</pose>
+	</model-->
     
   </world>
 </sdf>
