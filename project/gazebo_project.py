@@ -136,52 +136,70 @@ class ProjectEnv(gazebo_env.GazeboEnv):
         """Euclidean distance between current pose and the goal"""
         return round(sqrt(pow((goal_pose.x - now_pose.x), 2) + pow((goal_pose.y - now_pose.y), 2)),4)
 
+    def dist_to_16digit(self, state_data):            
+        if (state_data<=0.25): state_data_char = '0'
+        elif (0.25<state_data<=0.5): state_data_char = '1'
+        elif (0.5<state_data<=0.75): state_data_char = '2'
+        elif (0.75<state_data<=1): state_data_char = '3'
+        elif (1<state_data<=1.25): state_data_char = '4'
+        elif (1.25<state_data<=1.5): state_data_char = '5'
+        elif (1.5<state_data<=1.75): state_data_char = '6'
+        elif (1.75<state_data<=2): state_data_char = '7'
+        elif (2<state_data<=2.25): state_data_char = '8'                
+        elif (2.25<state_data<=2.5): state_data_char = '9'
+        elif (2.5<state_data<=2.75): state_data_char = 'A'
+        elif (2.75<state_data<=3): state_data_char = 'B'
+        elif (3<state_data<=3.25): state_data_char = 'C'
+        elif (3.25<state_data<=3.5): state_data_char = 'D'
+        elif (3.5<state_data<=3.75): state_data_char = 'E'
+        elif (3.75<state_data): state_data_char = 'F'
+        
+        return state_data_char      
+    
     def discretize_observation(self,data,new_ranges):
-        discretized_ranges = []
+        state_1, state_2, state_3, state_4, state_5 = [],[],[],[],[]
         min_range = 0.301
         done = False
-        state_data_average = []
         #16_state_data = ""
         #print(data.ranges)
         for i, item in enumerate(data.ranges):
-            if data.ranges[i] == float ('Inf') or np.isinf(data.ranges[i]):
-                state_data_average.append(4.25)
-            elif np.isnan(data.ranges[i]):
-                state_data_average.append(0)
+            if item == float ('Inf') or np.isinf(item):
+                state_data = 4.25
+            elif np.isnan(item):
+                state_data = 0
             else:
-                state_data_average.append(data.ranges[i])
+                state_data = item
 
-            if (i == 0 or (i+1)%270 == 0):
-                state_data = sum(state_data_average)/len(state_data_average)
+            if 0<=i<=4:
+                state_1.append(state_data)
+                if len(state_1)==5:
+                    state_1 = self.dist_to_16digit(sum(state_1)/len(state_1))
+            if 266<=i<=274:
+                state_2.append(state_data)
+                if len(state_2)==9:
+                    state_2 = self.dist_to_16digit(sum(state_2)/len(state_2))
+            if 536<=i<=544:
+                state_3.append(state_data)
+                if len(state_3)==9:
+                    state_3 = self.dist_to_16digit(sum(state_3)/len(state_3))
+            if 806<=i<=814:
+                state_4.append(state_data)
+                if len(state_4)==9:
+                    state_4 = self.dist_to_16digit(sum(state_4)/len(state_4))
+            if 1076<=i<=1080:
+                state_5.append(state_data)
+                if len(state_5)==5:
+                    state_5 = self.dist_to_16digit(sum(state_5)/len(state_5))
 
-                if (state_data<=0.25): state_data_char = '0'
-                elif (0.25<state_data<=0.5): state_data_char = '1'
-                elif (0.5<state_data<=0.75): state_data_char = '2'
-                elif (0.75<state_data<=1): state_data_char = '3'
-                elif (1<state_data<=1.25): state_data_char = '4'
-                elif (1.25<state_data<=1.5): state_data_char = '5'
-                elif (1.5<state_data<=1.75): state_data_char = '6'
-                elif (1.75<state_data<=2): state_data_char = '7'
-                elif (2<state_data<=2.25): state_data_char = '8'                
-                elif (2.25<state_data<=2.5): state_data_char = '9'
-                elif (2.5<state_data<=2.75): state_data_char = 'A'
-                elif (2.75<state_data<=3): state_data_char = 'B'
-                elif (3<state_data<=3.25): state_data_char = 'C'
-                elif (3.25<state_data<=3.5): state_data_char = 'D'
-                elif (3.5<state_data<=3.75): state_data_char = 'E'
-                elif (3.75<state_data): state_data_char = 'F'
-
-                discretized_ranges.append(state_data_char)
-
-                state_data_average = []
-
-            if (min_range > data.ranges[i] > 0):
+            if (min_range > state_data > 0):
                 done = True
+                    
+        states = state_1+state_2+state_3+state_4+state_5
 
         #print(done)
         #print(discretized_ranges)
         
-        return discretized_ranges, done
+        return states, done
 
     def _seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
