@@ -64,7 +64,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         """
         shape(lidar sensors + distance + angle,)
         """
-        self.observation_space = spaces.Box(low = -1, high = 1, shape=(12,), dtype=np.float32)
+        self.observation_space = spaces.Box(low = -1, high = 1, shape=(273,), dtype=np.float32)
 		
         self._seed()
 
@@ -116,25 +116,25 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             print("Service call failed: %s" %e)
 
     def random_obstacle(self):
-        for n in range(0,10):
-            state_msg = ModelState()
-            state_msg.model_name = 'obstacle_'+str(n)
-            #state_msg.pose.position.x = random.randint(1,9)
-            if n<8:
-                state_msg.pose.position.x = n+1
-            else:
-                state_msg.pose.position.x = 7-n
-            state_msg.pose.position.y = random.uniform(-1,1)
-            state_msg.twist.linear.x = 0.0
-            state_msg.twist.linear.y = 0.0
-            #state_msg.twist.linear.x = random.uniform(-0.3,0.3)
-            #state_msg.twist.linear.y = random.uniform(-0.3,0.3)
-            rospy.wait_for_service('/gazebo/set_model_state')
-            try:
-                set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
-                resp = set_state(state_msg)
-            except rospy.ServiceException, e:
-                print("Service call failed: %s" %e)
+        for n in range(0,9):
+            if n==1 or n==3 or n==5 or n==7 or n==8:
+                state_msg = ModelState()
+                state_msg.model_name = 'obstacle_'+str(n)
+                
+                if n<8:
+                    state_msg.pose.position.x = n+1
+                else:
+                    state_msg.pose.position.x = 7-n
+                state_msg.pose.position.y = random.uniform(-1,1)
+                
+                state_msg.twist.linear.x = 0.0
+                state_msg.twist.linear.y = random.uniform(0.1,0.3)
+                rospy.wait_for_service('/gazebo/set_model_state')
+                try:
+                    set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
+                    resp = set_state(state_msg)
+                except rospy.ServiceException, e:
+                    print("Service call failed: %s" %e)
 
     def sim_time(self, data):
         self.sim_time = data
@@ -264,7 +264,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/reset_simulation service call failed")
         
-        #self.random_obstacle()
+        self.random_obstacle()
         
         # Unpause simulation to make observation
         rospy.wait_for_service('/gazebo/unpause_physics')
