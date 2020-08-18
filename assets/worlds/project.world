@@ -218,6 +218,7 @@
 		<include>
 			<uri>model://project_ball</uri>
 		</include>
+		<pose>2 1 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_2">  
 		<include>
@@ -229,6 +230,7 @@
 		<include>
 			<uri>model://project_ball</uri>
 		</include>
+		<pose>4 1 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_4">  
 		<include>
@@ -240,6 +242,7 @@
 	    <include>
 		    <uri>model://project_ball</uri>
 		</include>
+		<pose>6 1 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_6">  
 		<include>
@@ -251,11 +254,13 @@
 		<include>
 			<uri>model://project_ball</uri>
 		</include>
+		<pose>8 1 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_8">  
 		<include>
 			<uri>model://project_ball</uri>
 		</include>
+		<pose>-1 1 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_9">  
 		<include>
