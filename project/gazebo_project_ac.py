@@ -116,7 +116,29 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             print("Service call failed: %s" %e)
 
     def random_obstacle(self):
-        for n in range(0,9):
+        for n in range(0,10):
+            
+            # FOR TEST
+            state_msg = ModelState()
+            state_msg.model_name = 'obstacle_'+str(n)
+                
+            if n<8:
+                state_msg.pose.position.x = n+1
+            else:
+                state_msg.pose.position.x = 7-n
+            state_msg.pose.position.y = random.uniform(-1,1)
+                
+            state_msg.twist.linear.x = 0.0
+            state_msg.twist.linear.y = random.uniform(0.1,0.2)
+            rospy.wait_for_service('/gazebo/set_model_state')
+            try:
+                set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
+                resp = set_state(state_msg)
+            except rospy.ServiceException, e:
+                print("Service call failed: %s" %e)
+                    
+            # FOR LEARNING
+            """
             if n==1 or n==3 or n==5 or n==7 or n==8:
                 state_msg = ModelState()
                 state_msg.model_name = 'obstacle_'+str(n)
@@ -135,6 +157,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
                     resp = set_state(state_msg)
                 except rospy.ServiceException, e:
                     print("Service call failed: %s" %e)
+            """
 
     def sim_time(self, data):
         self.sim_time = data
