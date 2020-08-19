@@ -64,7 +64,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         """
         shape(lidar sensors + distance + angle,)
         """
-        self.observation_space = spaces.Box(low = -1, high = 1, shape=(273,), dtype=np.float32)
+        self.observation_space = spaces.Box(low = -1, high = 1, shape=(93,), dtype=np.float32)
 		
         self._seed()
 
