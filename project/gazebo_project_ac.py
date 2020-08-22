@@ -4,7 +4,7 @@ import roslaunch
 import time
 import numpy as np
 import random
-import tf
+from squaternion import Quaternion
 from math import pow, atan2, sqrt, exp, pi
 
 from gym import utils, spaces
@@ -90,7 +90,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         state_msg.pose.position.x = random.randint(-2,2) + 0.5
         state_msg.pose.position.y = random.uniform(-1,1)
         state_msg.pose.position.z = 0.1
-        quaternion = tf.transformations.quaternion_from_euler(0,0,random.uniform(-pi,pi))
+        quaternion = Quaternion.from_euler(0,0,random.uniform(-pi,pi))
         state_msg.pose.orientation.z = quaternion[2]
         state_msg.pose.orientation.w = quaternion[3]
 
@@ -98,26 +98,26 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         try:
             set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
             resp = set_state(state_msg)
-        except rospy.ServiceException, e:
+        except (rospy.ServiceException) as e:
             print("Service call failed: %s" %e)
     
     def static_start(self):
         state_msg = ModelState()
         state_msg.model_name = 'robot'
-        quaternion = tf.transformations.quaternion_from_euler(0,0,-pi/4)
-        state_msg.pose.orientation.z = quaternion[2]
-        state_msg.pose.orientation.w = quaternion[3]
+        quaternion = Quaternion.from_euler(0,0,-pi/4)
+        state_msg.pose.orientation.z = quaternion[3]
+        state_msg.pose.orientation.w = quaternion[0]
 
         rospy.wait_for_service('/gazebo/set_model_state')
         try:
             set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
             resp = set_state(state_msg)
-        except rospy.ServiceException, e:
+        except (rospy.ServiceException) as e:
             print("Service call failed: %s" %e)
 
     def random_obstacle(self):
         for n in range(0,10):
-            
+            """
             # FOR TEST
             state_msg = ModelState()
             state_msg.model_name = 'obstacle_'+str(n)
@@ -134,7 +134,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             try:
                 set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
                 resp = set_state(state_msg)
-            except rospy.ServiceException, e:
+            except (rospy.ServiceException) as e:
                 print("Service call failed: %s" %e)
                     
             # FOR LEARNING
@@ -155,9 +155,8 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
                 try:
                     set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
                     resp = set_state(state_msg)
-                except rospy.ServiceException, e:
+                except (rospy.ServiceException) as e:
                     print("Service call failed: %s" %e)
-            """
 
     def sim_time(self, data):
         self.sim_time = data
@@ -170,8 +169,8 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         try:
             self.pose.x = data.pose[self.robot_id].position.x
             self.pose.y = data.pose[self.robot_id].position.y
-            quaternion = (data.pose[self.robot_id].orientation.x, data.pose[self.robot_id].orientation.y, data.pose[self.robot_id].orientation.z, data.pose[self.robot_id].orientation.w)
-            self.pose.theta = (tf.transformations.euler_from_quaternion(quaternion)[2]/pi)+0.25
+            quaternion = Quaternion(data.pose[self.robot_id].orientation.x, data.pose[self.robot_id].orientation.y, data.pose[self.robot_id].orientation.z, data.pose[self.robot_id].orientation.w)
+            self.pose.theta = (quaternion.to_euler()[2]/pi)+0.25
         except IndexError:
             None
 
