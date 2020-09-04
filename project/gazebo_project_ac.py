@@ -64,7 +64,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         """
         shape(lidar sensors + distance + angle,)
         """
-        self.observation_space = spaces.Box(low = -1, high = 1, shape=(465,), dtype=np.float32)
+        self.observation_space = spaces.Box(low = -1, high = 1, shape=(288,), dtype=np.float32)
 		
         self._seed()
 
@@ -240,7 +240,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         vel_cmd.angular.z = action[2]
     
         self.vel_pub.publish(vel_cmd)
-        time.sleep(0.01)
+        time.sleep(0.02)
         self.reset_vel()
         data = None
         while data is None:
@@ -261,7 +261,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
     def step(self, action):
         lidar_data = []
         target_data = []
-        for i in range(5):
+        for i in range(1):
             _data = self._step(action)
             lidar_data += list(_data[0])
             target_data += _data[1]
@@ -278,7 +278,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         self.beforepose.x = self.pose.x
         self.beforepose.y = self.pose.y
         
-        return np.asarray(state), reward, done, {}
+        return state, reward, done, {}
 
     def reset(self):
         # Resets the state of the environment and returns an initial observation.
@@ -320,7 +320,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         lidar_data = []
         target_data = []   
         _target_data = self.calculate_target()
-        for i in range(5):
+        for i in range(1):
             lidar_data += list(_lidar_data.ranges)
             target_data += _target_data
             data = lidar_data + target_data
@@ -332,5 +332,5 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         self.beforepose.y = self.pose.y
         self.subgoal_as_dist_to_goal = self.euclidean_distance(self.pose, self.goalpose)
 
-        return np.asarray(state)
+        return state
 
