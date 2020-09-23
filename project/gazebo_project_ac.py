@@ -57,14 +57,14 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         """
         
         self.action_space = spaces.Box(
-            low = np.array([-0.3, -0.3, -0.3]),
-            high = np.array([0.3, 0.3, 0.3]),
+            low = np.array([-0.4, -0.4, -0.3]),
+            high = np.array([0.4, 0.4, 0.3]),
             dtype = np.float32
         )
         """
         shape(lidar sensors + distance + angle,)
         """
-        self.observation_space = spaces.Box(low = -1, high = 1, shape=(288,), dtype=np.float32)
+        self.observation_space = spaces.Box(low = -1, high = 1, shape=(93,), dtype=np.float32)
 		
         self._seed()
 
@@ -136,9 +136,8 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
                 resp = set_state(state_msg)
             except (rospy.ServiceException) as e:
                 print("Service call failed: %s" %e)
-                    
+            """        
             # FOR LEARNING
-            """
             if n==1 or n==3 or n==5 or n==7 or n==8:
                 state_msg = ModelState()
                 state_msg.model_name = 'obstacle_'+str(n)
@@ -151,14 +150,14 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
                 
                 state_msg.twist.linear.x = 0.0
                 pos_neg = 1 if random.random() < 0.5 else -1
-                state_msg.twist.linear.y = random.uniform(0.1,0.3) * pos_neg
+                state_msg.twist.linear.y = random.uniform(0.1,0.4) * pos_neg
                 rospy.wait_for_service('/gazebo/set_model_state')
                 try:
                     set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
                     resp = set_state(state_msg)
                 except (rospy.ServiceException) as e:
                     print("Service call failed: %s" %e)
-
+             
     def sim_time(self, data):
         self.sim_time = data
 
@@ -171,7 +170,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             self.pose.x = data.pose[self.robot_id].position.x
             self.pose.y = data.pose[self.robot_id].position.y
             quaternion = Quaternion(data.pose[self.robot_id].orientation.x, data.pose[self.robot_id].orientation.y, data.pose[self.robot_id].orientation.z, data.pose[self.robot_id].orientation.w)
-            self.pose.theta = (quaternion.to_euler()[2]/pi)+0.25
+            self.pose.theta = (quaternion.to_euler()[0]/pi)+0.25
         except IndexError:
             None
 
@@ -214,7 +213,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         min_range = 0.301
         done = False
         state_list = []
-        for i, item in enumerate(data[0:-10]):
+        for i, item in enumerate(data[:-2]):
             if not np.isinf(data[i]):    
                 if (min_range > data[i] > 0):
                     done = True
@@ -222,7 +221,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             else:
                 state_list += [1.0]
         
-        state_list += data[-10:]
+        state_list += data[-2:]
         state_tuple = tuple(state_list)
         return state_tuple, done
 
@@ -240,7 +239,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         vel_cmd.angular.z = action[2]
     
         self.vel_pub.publish(vel_cmd)
-        time.sleep(0.02)
+        time.sleep(0.01)
         self.reset_vel()
         data = None
         while data is None:
@@ -261,11 +260,11 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
     def step(self, action):
         lidar_data = []
         target_data = []
-        for i in range(1):
-            _data = self._step(action)
-            lidar_data += list(_data[0])
-            target_data += _data[1]
-            data = lidar_data + target_data
+        
+        _data = self._step(action)
+        lidar_data += list(_data[0])
+        target_data += _data[1]
+        data = lidar_data + target_data
         data = tuple(data)
 
         state, done = self.calculate_observation(data)
@@ -273,7 +272,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         cur_distance = self.euclidean_distance(self.pose, self.goalpose)
         prev_distance = self.euclidean_distance(self.beforepose, self.goalpose)
         
-        reward = (prev_distance-cur_distance)*5 + 0.5*(1-abs(self.target_angle)) - int(done)*3
+        reward = (prev_distance-cur_distance)*20 + (1-abs(self.target_angle))*0.5 - int(done)*3
         
         self.beforepose.x = self.pose.x
         self.beforepose.y = self.pose.y
