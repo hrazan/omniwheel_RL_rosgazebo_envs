@@ -64,7 +64,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         """
         shape(lidar sensors + distance + angle,)
         """
-        self.observation_space = spaces.Box(low = -1, high = 1, shape=(180,), dtype=np.float32)
+        self.observation_space = spaces.Box(low = -1, high = 1, shape=(108,), dtype=np.float32)
 		
         self._seed()
 
@@ -118,7 +118,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
     def random_obstacle(self):
         for n in range(0,10):
             
-            max_obs_acc = 0.3 # LEARN: 0.3, TEST: 0.2
+            max_obs_acc = 0.2 # LEARN: 0.3, TEST: 0.2
             state_msg = ModelState()
             state_msg.model_name = 'obstacle_'+str(n)
                 
