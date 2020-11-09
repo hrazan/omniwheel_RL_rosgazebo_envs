@@ -6,6 +6,7 @@ import random
 import numpy as np
 
 from math import pow, atan2, sqrt, exp
+from statistics import median
 
 from gym import utils, spaces
 from gym_gazebo.project_envs import gazebo_env
@@ -51,8 +52,8 @@ class ProjectEnv(gazebo_env.GazeboEnv):
         self.goal = False
         self.randomstart = False
 
-        self.goalpose.x = 1.500 # map0: 1.5, map1: 1.25, map2: 2.0
-        self.goalpose.y = 0.000 # map0,1: 0.0, map2: -0.25
+        self.goalpose.x = 2.000 # map0: 1.5, map1: 1.25, map2: 2.0
+        self.goalpose.y = -0.250 # map0,1: 0.0, map2: -0.25
         self.get_pose(self.beforepose)
         #self.beforepose.x = 0.0000
         #self.beforepose.y = 0.0000
@@ -173,27 +174,27 @@ class ProjectEnv(gazebo_env.GazeboEnv):
             if 0<=i<=4:
                 state_1.append(state_data)
                 if len(state_1)==5:
-                    state_1 = self.dist_to_16digit(sum(state_1)/len(state_1))
+                    state_1 = self.dist_to_16digit(median(state_1))
             if 266<=i<=274:
                 state_2.append(state_data)
                 if len(state_2)==9:
-                    state_2 = self.dist_to_16digit(sum(state_2)/len(state_2))
+                    state_2 = self.dist_to_16digit(median(state_2))
             if 536<=i<=544:
                 state_3.append(state_data)
                 if len(state_3)==9:
-                    state_3 = self.dist_to_16digit(sum(state_3)/len(state_3))
+                    state_3 = self.dist_to_16digit(median(state_3))
             if 806<=i<=814:
                 state_4.append(state_data)
                 if len(state_4)==9:
-                    state_4 = self.dist_to_16digit(sum(state_4)/len(state_4))
+                    state_4 = self.dist_to_16digit(median(state_4))
             if 1076<=i<=1080:
                 state_5.append(state_data)
                 if len(state_5)==5:
-                    state_5 = self.dist_to_16digit(sum(state_5)/len(state_5))
+                    state_5 = self.dist_to_16digit(median(state_5))
 
             if (min_range > state_data > 0):
                 done = True
-                    
+        
         states = state_1+state_2+state_3+state_4+state_5
 
         #print(done)
@@ -221,25 +222,25 @@ class ProjectEnv(gazebo_env.GazeboEnv):
 
         if action == 0: #FORWARD
             vel_cmd = Twist()
-            vel_cmd.linear.x = 0.2
+            vel_cmd.linear.x = 0.5
             vel_cmd.linear.y = 0.0
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
         elif action == 1: #LEFT
             vel_cmd = Twist()
             vel_cmd.linear.x = 0.0
-            vel_cmd.linear.y = 0.2
+            vel_cmd.linear.y = 0.5
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
         elif action == 2: #RIGHT
             vel_cmd = Twist()
             vel_cmd.linear.x = 0.0
-            vel_cmd.linear.y = -0.2
+            vel_cmd.linear.y = -0.5
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
         elif action == 3: #BACK
             vel_cmd = Twist()
-            vel_cmd.linear.x = -0.2
+            vel_cmd.linear.x = -0.5
             vel_cmd.linear.y = 0.0
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
