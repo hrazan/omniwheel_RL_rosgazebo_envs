@@ -6,7 +6,7 @@ import random
 import numpy as np
 
 from math import pow, atan2, sqrt, exp
-from statistics import median
+from statistics import mean
 
 from gym import utils, spaces
 from gym_gazebo.project_envs import gazebo_env
@@ -67,11 +67,6 @@ class ProjectEnv(gazebo_env.GazeboEnv):
         state_msg.model_name = 'robot'
         # MAP 0
         """
-        if random.random()<0.5:
-            state_msg.pose.position.x = -0.50+(0.25*random.randint(1,3))
-        else:
-            state_msg.pose.position.x = 1.00+(0.25*random.randint(1,3))
-        """
         area = random.randint(1,3)
         if area == 1:
             state_msg.pose.position.x = random.uniform(-0.4,0.4)
@@ -82,13 +77,29 @@ class ProjectEnv(gazebo_env.GazeboEnv):
         else:
             state_msg.pose.position.x = random.uniform(1.1,1.9)
             state_msg.pose.position.y = random.uniform(-1.15,0.35)
-            
+        """ 
         
         # MAP 2
-        """
-        state_msg.pose.position.x = random.randint(0,2)
-        state_msg.pose.position.y = -1.25+(0.25*random.randint(1,9))
-        """
+        area = random.randint(1,6)
+        if area == 1:
+            state_msg.pose.position.x = random.uniform(-0.15,0.15)
+            state_msg.pose.position.y = random.uniform(-1.15,1.15)
+        elif area == 2:
+            state_msg.pose.position.x = random.uniform(0.15,0.85)
+            state_msg.pose.position.y = random.uniform(0.35,0.65)
+        elif area == 3:
+            state_msg.pose.position.x = random.uniform(0.85,1.15)
+            state_msg.pose.position.y = random.uniform(-1.15,1.15)
+        elif area == 4:
+            state_msg.pose.position.x = random.uniform(1.15,1.85)
+            state_msg.pose.position.y = random.uniform(-1.15,-0.85)
+        elif area == 5:
+            state_msg.pose.position.x = random.uniform(1.15,1.85)
+            state_msg.pose.position.y = random.uniform(0.85,1.15)
+        else:
+            state_msg.pose.position.x = random.uniform(1.85,2.15)
+            state_msg.pose.position.y = random.uniform(-1.15,1.15)
+        
 
         rospy.wait_for_service('/gazebo/set_model_state')
         try:
@@ -171,26 +182,26 @@ class ProjectEnv(gazebo_env.GazeboEnv):
             else:
                 state_data = item
 
-            if 0<=i<=4:
+            if 0<=i<=216:
                 state_1.append(state_data)
-                if len(state_1)==5:
-                    state_1 = self.dist_to_16digit(median(state_1))
-            if 266<=i<=274:
+                if len(state_1)==217:
+                    state_1 = self.dist_to_16digit(mean(state_1))
+            if 216<=i<=432:
                 state_2.append(state_data)
-                if len(state_2)==9:
-                    state_2 = self.dist_to_16digit(median(state_2))
-            if 536<=i<=544:
+                if len(state_2)==217:
+                    state_2 = self.dist_to_16digit(mean(state_2))
+            if 432<=i<=648:
                 state_3.append(state_data)
-                if len(state_3)==9:
-                    state_3 = self.dist_to_16digit(median(state_3))
-            if 806<=i<=814:
+                if len(state_3)==217:
+                    state_3 = self.dist_to_16digit(mean(state_3))
+            if 648<=i<=864:
                 state_4.append(state_data)
-                if len(state_4)==9:
-                    state_4 = self.dist_to_16digit(median(state_4))
-            if 1076<=i<=1080:
+                if len(state_4)==217:
+                    state_4 = self.dist_to_16digit(mean(state_4))
+            if 864<=i<=1080:
                 state_5.append(state_data)
-                if len(state_5)==5:
-                    state_5 = self.dist_to_16digit(median(state_5))
+                if len(state_5)==217:
+                    state_5 = self.dist_to_16digit(mean(state_5))
 
             if (min_range > state_data > 0):
                 done = True
