@@ -6,6 +6,7 @@ import numpy as np
 import random
 from squaternion import Quaternion
 from math import pow, atan2, sqrt, exp, pi
+from statistics import mean
 
 from gym import utils, spaces
 from gym_gazebo.project_envs import gazebo_env
@@ -40,11 +41,12 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         self.update_subgoal = False
         self.robot_id = 12
 
-        self.goalpose.x = 9.000
+        self.goalpose.x = 7.000
         self.goalpose.y = 0.000
         self.get_pose(self.beforepose)
         self.subgoal_as_dist_to_goal = 30 # max. lidar's value
         self.target_angle = 0
+        self.lidar_avg = 0
         self.start_mode = None
 
 		# Action space design
@@ -57,14 +59,14 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         """
         
         self.action_space = spaces.Box(
-            low = np.array([-0.3, -0.3, -0.3]),
-            high = np.array([0.3, 0.3, 0.3]),
+            low = np.array([-0.5, -0.5, -0.3]),
+            high = np.array([0.5, 0.5, 0.3]),
             dtype = np.float32
         )
         """
         shape(lidar sensors + distance + angle,)
         """
-        self.observation_space = spaces.Box(low = -1, high = 1, shape=(108,), dtype=np.float32)
+        self.observation_space = spaces.Box(low = -1, high = 1, shape=(105,), dtype=np.float32)
 		
         self._seed()
 
@@ -87,7 +89,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
     def random_start(self):
         state_msg = ModelState()
         state_msg.model_name = 'robot'
-        state_msg.pose.position.x = 0.0 #random.randint(-2,2) + 0.5
+        state_msg.pose.position.x = -6.0
         state_msg.pose.position.y = random.uniform(-1,1)
         state_msg.pose.position.z = 0.1
         quaternion = Quaternion.from_euler(0,0,random.uniform(-pi,pi))
@@ -105,6 +107,8 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         state_msg = ModelState()
         state_msg.model_name = 'robot'
         quaternion = Quaternion.from_euler(0,0,-pi/4)
+        state_msg.pose.position.x = -6.0
+        state_msg.pose.position.y = 0.0
         state_msg.pose.orientation.z = quaternion[3]
         state_msg.pose.orientation.w = quaternion[0]
 
@@ -123,9 +127,9 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             state_msg.model_name = 'obstacle_'+str(n)
                 
             if n<8:
-                state_msg.pose.position.x = n+1
+                state_msg.pose.position.x = (n+1)*1.5 - 6
             else:
-                state_msg.pose.position.x = 7-n
+                state_msg.pose.position.x = (7-n)*1.5 - 6
             state_msg.pose.position.y = random.uniform(-1,1)
                 
             state_msg.twist.linear.x = 0.0
@@ -189,18 +193,19 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         return [cur_distance/30, self.target_angle]
     
     def calculate_observation(self,data):
-        min_range = 0.301
+        min_range = 0.300
         done = False
         state_list = []
         for i, item in enumerate(data[:-2]):
             if not np.isinf(data[i]):    
-                if (min_range > data[i] > 0):
+                if (min_range >= data[i] > 0):
                     done = True
                 state_list += [data[i]/30]
             else:
                 state_list += [1.0]
         
         state_list += data[-2:]
+        self.lidar_avg = mean(state_list[:-2])*30
         state_tuple = tuple(state_list)
         return state_tuple, done
 
@@ -248,10 +253,10 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
 
         state, done = self.calculate_observation(data)
         
-        cur_distance = self.euclidean_distance(self.pose, self.goalpose)
-        prev_distance = self.euclidean_distance(self.beforepose, self.goalpose)
+        distance = self.euclidean_distance(self.beforepose, self.goalpose) - self.euclidean_distance(self.pose, self.goalpose)
         
-        reward = (prev_distance-cur_distance)*5 + (1-abs(self.target_angle))*0.5 - int(done)*3
+        reward = distance + abs(0.5*distance*exp(-abs(self.target_angle)/0.35)) + abs(0.4*distance*(1-exp((0.3-self.lidar_avg)/0.3))) - int(done)
+        #print("d:"+str(round(prev_distance-cur_distance,4))+"|ang:"+str(round(self.target_angle,3))+"|R:"+str(round(reward,3)))
         
         self.beforepose.x = self.pose.x
         self.beforepose.y = self.pose.y

@@ -66,14 +66,14 @@
     </joint>
   </xacro:macro>
 
-  <xacro:wheel_link name="left" linkrpy="0 0 0" axisxyz="1 0 0" originxyz="0.15 0 -0.075"/>
-  <xacro:wheel_link name="right" linkrpy="0 0 0" axisxyz="1 0 0" originxyz="-0.15 0 -0.075"/>
-  <xacro:wheel_link name="front" linkrpy="0 0 0" axisxyz="0 1 0" originxyz="0 0.15 -0.075"/>
-  <xacro:wheel_link name="back" linkrpy="0 0 0" axisxyz="0 1 0" originxyz="0 -0.15 -0.075"/>
+  <xacro:wheel_link name="front_right" linkrpy="0 0 0" axisxyz="1 0 0" originxyz="0.15 0 -0.075"/>
+  <xacro:wheel_link name="back_left" linkrpy="0 0 0" axisxyz="1 0 0" originxyz="-0.15 0 -0.075"/>
+  <xacro:wheel_link name="front_left" linkrpy="0 0 0" axisxyz="0 1 0" originxyz="0 0.15 -0.075"/>
+  <xacro:wheel_link name="back_right" linkrpy="0 0 0" axisxyz="0 1 0" originxyz="0 -0.15 -0.075"/>
 
   <!-- Lidar sensor -->
   <xacro:include filename="lidar_sensor.urdf.xacro"/>
-  <!--Q:ray_count_horizontal=10, DQN:ray_count_horizontal=216 -->
+  <!--Q:ray_count_horizontal=60, DQN:ray_count_horizontal=216 -->
   <xacro:lidar_sensor
     name="sonar"
     parent="base_link"
@@ -83,9 +83,9 @@
     max_range="30.0"
     field_of_view_horizontal="${270*M_PI/180}"
     field_of_view_vertical="${1*M_PI/180}"
-    ray_count_horizontal="2162" 
+    ray_count_horizontal="62" 
     ray_count_vertical="1">
-    <origin xyz="0 0.0 0.1" rpy="0 0 0"/>
+    <origin xyz="0 0.0 0.1" rpy="0 0 ${M_PI/4}"/>
   </xacro:lidar_sensor>
 
   <gazebo>
@@ -99,6 +99,4 @@
   </gazebo>
 
 </robot>
-
-
 
