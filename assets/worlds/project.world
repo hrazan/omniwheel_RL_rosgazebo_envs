@@ -36,7 +36,7 @@
     <gui fullscreen='0'>
       <camera name='user_camera'>
         <!--3x10(4.7 -1 17 ...),3x3(0.8 -1.2 5.8 ...) -->
-        <pose>0 0 31 0 1.56 3.14</pose>
+        <pose>3 0 23 0 1.56 3.14</pose>
         <view_controller>orbit</view_controller>
       </camera>
     </gui>
@@ -58,43 +58,43 @@
 	    <include>
 		    <uri>model://project_ball</uri>
 		</include>
-		<pose>-4.5 0.75 0 0 0 0</pose>
+		<pose>-1 0.75 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_1">  
 		<include>
 			<uri>model://project_ball</uri>
 		</include>
-		<pose>-3 1 0 0 0 0</pose>
+		<pose>0 1 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_2">  
 		<include>
 			<uri>model://project_ball</uri>
 		</include>
-		<pose>-1.5 0 0 0 0 0</pose>
+		<pose>1 0 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_3">  
 		<include>
 			<uri>model://project_ball</uri>
 		</include>
-		<pose>0 1 0 0 0 0</pose>
+		<pose>2 1 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_4">  
 		<include>
 			<uri>model://project_ball</uri>
 		</include>
-		<pose>1.5 -1 0 0 0 0</pose>
+		<pose>3 -1 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_5">  
 	    <include>
 		    <uri>model://project_ball</uri>
 		</include>
-		<pose>3 1 0 0 0 0</pose>
+		<pose>4 1 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_6">  
 		<include>
 			<uri>model://project_ball</uri>
 		</include>
-		<pose>4.5 -0.75 0 0 0 0</pose>
+		<pose>5 -0.75 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_7">  
 		<include>
@@ -106,13 +106,13 @@
 		<include>
 			<uri>model://project_ball</uri>
 		</include>
-		<pose>-7.5 1 0 0 0 0</pose>
+		<pose>-3 1 0 0 0 0</pose>
 	</model>
 	<model name="obstacle_9">  
 		<include>
 			<uri>model://project_ball</uri>
 		</include>
-		<pose>-9 1 0 0 0 0</pose>
+		<pose>-4 1 0 0 0 0</pose>
 	</model>
     
   </world>

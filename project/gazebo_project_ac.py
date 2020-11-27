@@ -41,7 +41,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         self.update_subgoal = False
         self.robot_id = 12
 
-        self.goalpose.x = 7.000
+        self.goalpose.x = 9.000
         self.goalpose.y = 0.000
         self.get_pose(self.beforepose)
         self.subgoal_as_dist_to_goal = 30 # max. lidar's value
@@ -59,8 +59,8 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         """
         
         self.action_space = spaces.Box(
-            low = np.array([-0.5, -0.5, -0.3]),
-            high = np.array([0.5, 0.5, 0.3]),
+            low = np.array([-0.3, -0.3, -0.3]),
+            high = np.array([0.3, 0.3, 0.3]),
             dtype = np.float32
         )
         """
@@ -89,7 +89,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
     def random_start(self):
         state_msg = ModelState()
         state_msg.model_name = 'robot'
-        state_msg.pose.position.x = -6.0
+        state_msg.pose.position.x = -2.0
         state_msg.pose.position.y = random.uniform(-1,1)
         state_msg.pose.position.z = 0.1
         quaternion = Quaternion.from_euler(0,0,random.uniform(-pi,pi))
@@ -107,7 +107,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         state_msg = ModelState()
         state_msg.model_name = 'robot'
         quaternion = Quaternion.from_euler(0,0,-pi/4)
-        state_msg.pose.position.x = -6.0
+        state_msg.pose.position.x = -2.0
         state_msg.pose.position.y = 0.0
         state_msg.pose.orientation.z = quaternion[3]
         state_msg.pose.orientation.w = quaternion[0]
@@ -122,14 +122,14 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
     def random_obstacle(self):
         for n in range(0,10):
             
-            max_obs_acc = 0.2 # LEARN: 0.3, TEST: 0.2
+            max_obs_acc = 0.3 # LEARN: 0.3, TEST: 0.2
             state_msg = ModelState()
             state_msg.model_name = 'obstacle_'+str(n)
                 
             if n<8:
-                state_msg.pose.position.x = (n+1)*1.5 - 6
+                state_msg.pose.position.x = n-1
             else:
-                state_msg.pose.position.x = (7-n)*1.5 - 6
+                state_msg.pose.position.x = 5-n
             state_msg.pose.position.y = random.uniform(-1,1)
                 
             state_msg.twist.linear.x = 0.0
