@@ -121,8 +121,9 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             print("Service call failed: %s" %e)
 
     def random_obstacle(self):
+        obstacle_mode = random.randint(0,1)
+        
         for n in range(0,10):
-            
             max_obs_acc = 1
             state_msg = ModelState()
             state_msg.model_name = 'obstacle_'+str(n)
@@ -134,7 +135,10 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             state_msg.pose.position.y = random.uniform(-1,1)
                 
             state_msg.twist.linear.x = 0.0
-            state_msg.twist.linear.y = random.uniform(-max_obs_acc,max_obs_acc)
+            if obstacle_mode == 0:
+                state_msg.twist.linear.y = 0.0
+            else:
+                state_msg.twist.linear.y = random.uniform(-max_obs_acc,max_obs_acc)
             rospy.wait_for_service('/gazebo/set_model_state')
             try:
                 set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
