@@ -121,7 +121,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             print("Service call failed: %s" %e)
 
     def random_obstacle(self):
-        obstacle_mode = random.randint(0,2)
+        obstacle_mode = 0#random.randint(0,2)
         
         for n in range(0,10):
             max_obs_acc = 1
@@ -264,7 +264,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         if cur_distance <= self.goal_radius: self.goal = True
         else: self.goal = False
         
-        reward = distance + distance*exp(-abs(self.target_angle)/0.35) + 0.3*(1-exp((0.3-self.lidar_avg)/0.3)) + int(self.goal) - int(done)
+        reward = distance + distance*exp(-abs(self.target_angle)/0.35) + 0.3*(-exp((0.3-self.lidar_avg)/0.3)) + int(self.goal) - int(done)
         #print("d:"+str(round(prev_distance-cur_distance,4))+"|ang:"+str(round(self.target_angle,3))+"|R:"+str(round(reward,3)))
         
         self.beforepose.x = self.pose.x
