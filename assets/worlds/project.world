@@ -55,7 +55,7 @@
     
     <!-- Obstacles -->
 	<!-- Pillars and Balls (Dynamic) -->
-    <!--model name="obstacle_0">  
+    <model name="obstacle_0">  
 	    <include>
 		    <uri>model://project_ball</uri>
 		</include>
@@ -120,7 +120,7 @@
 			<uri>model://project_ball</uri>
 		</include>
 		<pose>0 0 0 0 0 0</pose>
-	</model-->
+	</model>
     
   </world>
 </sdf>

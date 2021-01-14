@@ -40,18 +40,10 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         self.goal = False
         self.goal_radius = 1.500
         self.update_subgoal = False
-        self.robot_id = 2
+        self.robot_id = 13
 
-        self.goalpose.x = 0.000
-        self.goalpose.y = 0.000
-        """
-        self.goalx = [9.000,9.000,9.000,0.000,-9.000]
-        self.goaly = [-9.000,9.000,-9.000,0.000,-9.000]
-        """
-        self.goalx = [0.000,8.500,8.500,-8.500,-8.500]
-        self.goaly = [0.000,8.500,-8.500,8.500,-8.500]
-        self.goalid = 0
-        self.goalsum = 0
+        self.goalpose.x = 8.500
+        self.goalpose.y = 8.500
         
         self.get_pose(self.beforepose)
         self.subgoal_as_dist_to_goal = 30 # max. lidar's value
@@ -94,10 +86,6 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         vel_cmd.linear.y = 0.0
         vel_cmd.angular.z = 0.0
         self.vel_pub.publish(vel_cmd)
-    
-    def set_goal(self):
-        self.goalpose.x = self.goalx[self.goalid]
-        self.goalpose.y = self.goaly[self.goalid]
 
     # Set postion of the robot randomly
     def random_start(self):
@@ -305,11 +293,6 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         
         if cur_distance <= self.goal_radius: 
             self.goal = True
-            self.goalsum += 1
-            if self.goalid<4: self.goalid += 1
-            else: self.goalid = 0
-            self.set_goal()
-            print("goal:",self.goalpose.x,self.goalpose.y)
         else: self.goal = False
         
         reward = distance + distance*exp(-abs(self.target_angle)/0.35) + 0.3*(1-exp((0.3-self.lidar_avg)/0.3)) + int(self.goal) - int(done)
@@ -329,10 +312,7 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/reset_simulation service call failed")
         
-        #self.random_obstacle()
-        self.goalid = 0
-        self.goalsum = 0
-        self.set_goal()
+        self.random_obstacle()
         
         # Unpause simulation to make observation
         rospy.wait_for_service('/gazebo/unpause_physics')
