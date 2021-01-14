@@ -38,12 +38,21 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         self.startpose = Pose()
 
         self.goal = False
-        self.goal_radius = 0.500
+        self.goal_radius = 1.500
         self.update_subgoal = False
-        self.robot_id = 12
+        self.robot_id = 2
 
-        self.goalpose.x = 9.000
+        self.goalpose.x = 0.000
         self.goalpose.y = 0.000
+        """
+        self.goalx = [9.000,9.000,9.000,0.000,-9.000]
+        self.goaly = [-9.000,9.000,-9.000,0.000,-9.000]
+        """
+        self.goalx = [0.000,8.500,8.500,-8.500,-8.500]
+        self.goaly = [0.000,8.500,-8.500,8.500,-8.500]
+        self.goalid = 0
+        self.goalsum = 0
+        
         self.get_pose(self.beforepose)
         self.subgoal_as_dist_to_goal = 30 # max. lidar's value
         self.target_angle = 0
@@ -85,6 +94,10 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         vel_cmd.linear.y = 0.0
         vel_cmd.angular.z = 0.0
         self.vel_pub.publish(vel_cmd)
+    
+    def set_goal(self):
+        self.goalpose.x = self.goalx[self.goalid]
+        self.goalpose.y = self.goaly[self.goalid]
 
     # Set postion of the robot randomly
     def random_start(self):
@@ -107,9 +120,9 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
     def static_start(self):
         state_msg = ModelState()
         state_msg.model_name = 'robot'
-        quaternion = Quaternion.from_euler(0,0,-pi/4)
-        state_msg.pose.position.x = -6.0
-        state_msg.pose.position.y = 0.0
+        quaternion = Quaternion.from_euler(0,0,0)
+        state_msg.pose.position.x = -9.0
+        state_msg.pose.position.y = -9.0
         state_msg.pose.orientation.z = quaternion[3]
         state_msg.pose.orientation.w = quaternion[0]
 
@@ -121,24 +134,53 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
             print("Service call failed: %s" %e)
 
     def random_obstacle(self):
-        obstacle_mode = 0#random.randint(0,2)
+        obstacle_mode = 0#random.randint(0,1)
         
-        for n in range(0,10):
+        for n in range(0,11):
             max_obs_acc = 1
             state_msg = ModelState()
             state_msg.model_name = 'obstacle_'+str(n)
+            
+            if n==0:
+                state_msg.pose.position.x = random.uniform(7.3,9.7)    
+                state_msg.pose.position.y = random.uniform(1.8,6.7)
+            elif n==1:
+                state_msg.pose.position.x = random.uniform(7.3,9.7)       
+                state_msg.pose.position.y = random.uniform(-1.8,-6.7)
+            elif n==2:
+                state_msg.pose.position.x = random.uniform(3.3,5.7)       
+                state_msg.pose.position.y = random.uniform(1.8,6.7)
+            elif n==3:
+                state_msg.pose.position.x = random.uniform(3.3,5.7)        
+                state_msg.pose.position.y = random.uniform(-1.8,-6.7)
+            elif n==4:
+                state_msg.pose.position.x = random.uniform(-1.2,1.2)      
+                state_msg.pose.position.y = random.uniform(1.8,6.7)
+            elif n==5:
+                state_msg.pose.position.x = random.uniform(-1.2,1.2)      
+                state_msg.pose.position.y = random.uniform(-1.8,-6.7)
+            elif n==6:
+                state_msg.pose.position.x = random.uniform(-3.3,-5.7)      
+                state_msg.pose.position.y = random.uniform(1.8,6.7)
+            elif n==7:
+                state_msg.pose.position.x = random.uniform(-3.3,-5.7)      
+                state_msg.pose.position.y = random.uniform(-1.8,-6.7)
+            elif n==8:
+                state_msg.pose.position.x = random.uniform(-7.3,-9.7)      
+                state_msg.pose.position.y = random.uniform(1.8,6.7)
+            elif n==9:
+                state_msg.pose.position.x = random.uniform(-7.3,-9.7)      
+                state_msg.pose.position.y = random.uniform(-1.8,-6.7)
+            elif n==10:
+                state_msg.pose.position.x = random.uniform(-9.7,9.7)    
+                state_msg.pose.position.y = random.uniform(-1.2,1.2)
                 
-            if n<8:
-                state_msg.pose.position.x = (n+1)*1.5 - 6
+            state_msg.twist.linear.y = 0.0
+            if n == 10:
+                state_msg.twist.linear.x = random.uniform(-max_obs_acc,max_obs_acc)
             else:
-                state_msg.pose.position.x = (7-n)*1.5 - 6
-            state_msg.pose.position.y = random.uniform(-1,1)
+                state_msg.twist.linear.x = 0.0
                 
-            state_msg.twist.linear.x = 0.0
-            if obstacle_mode == 0:
-                state_msg.twist.linear.y = 0.0
-            else:
-                state_msg.twist.linear.y = random.uniform(-max_obs_acc,max_obs_acc)
             rospy.wait_for_service('/gazebo/set_model_state')
             try:
                 set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
@@ -261,10 +303,16 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         cur_distance = self.euclidean_distance(self.pose, self.goalpose)
         distance = self.euclidean_distance(self.beforepose, self.goalpose) - cur_distance
         
-        if cur_distance <= self.goal_radius: self.goal = True
+        if cur_distance <= self.goal_radius: 
+            self.goal = True
+            self.goalsum += 1
+            if self.goalid<4: self.goalid += 1
+            else: self.goalid = 0
+            self.set_goal()
+            print("goal:",self.goalpose.x,self.goalpose.y)
         else: self.goal = False
         
-        reward = distance + distance*exp(-abs(self.target_angle)/0.35) + 0.3*(-exp((0.3-self.lidar_avg)/0.3)) + int(self.goal) - int(done)
+        reward = distance + distance*exp(-abs(self.target_angle)/0.35) + 0.3*(1-exp((0.3-self.lidar_avg)/0.3)) + int(self.goal) - int(done)
         #print("d:"+str(round(prev_distance-cur_distance,4))+"|ang:"+str(round(self.target_angle,3))+"|R:"+str(round(reward,3)))
         
         self.beforepose.x = self.pose.x
@@ -281,7 +329,10 @@ class ProjectAcEnv(gazebo_env.GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/reset_simulation service call failed")
         
-        self.random_obstacle()
+        #self.random_obstacle()
+        self.goalid = 0
+        self.goalsum = 0
+        self.set_goal()
         
         # Unpause simulation to make observation
         rospy.wait_for_service('/gazebo/unpause_physics')

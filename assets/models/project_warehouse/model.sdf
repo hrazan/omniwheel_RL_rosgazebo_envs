@@ -152,7 +152,7 @@
       <collision name='shelf_1_Collision'>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1 1</size>
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -171,7 +171,7 @@
         <pose frame=''>0 0 0.5 0 0 0</pose>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1 1</size>
           </box>
         </geometry>
         <material>
@@ -182,13 +182,13 @@
           <ambient>1 1 1 1</ambient>
         </material>
       </visual>
-      <pose frame=''>4.75 7.5 0 0 0 0</pose>
+      <pose frame=''>4.25 6.5 0 0 0 0</pose>
     </link>
     <link name='shelf_2'>
       <collision name='shelf_2_Collision'>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1 1</size>
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -207,7 +207,7 @@
         <pose frame=''>0 0 0.5 0 0 0</pose>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1 1</size>
           </box>
         </geometry>
         <material>
@@ -218,14 +218,14 @@
           <ambient>1 1 1 1</ambient>
         </material>
       </visual>
-      <pose frame=''>-4.75 7.5 0 0 0 0</pose>
+      <pose frame=''>-4.25 6.5 0 0 0 0</pose>
     </link>
     
     <link name='shelf_3'>
       <collision name='shelf_3_Collision'>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1.5 1</size>
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -244,7 +244,7 @@
         <pose frame=''>0 0 0.5 0 0 0</pose>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1.5 1</size>
           </box>
         </geometry>
         <material>
@@ -255,13 +255,13 @@
           <ambient>1 1 1 1</ambient>
         </material>
       </visual>
-      <pose frame=''>4.75 4.5 0 0 0 0</pose>
+      <pose frame=''>4.25 2.25 0 0 0 0</pose>
     </link>
     <link name='shelf_4'>
       <collision name='shelf_4_Collision'>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1.5 1</size>
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -280,7 +280,7 @@
         <pose frame=''>0 0 0.5 0 0 0</pose>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1.5 1</size>
           </box>
         </geometry>
         <material>
@@ -291,14 +291,14 @@
           <ambient>1 1 1 1</ambient>
         </material>
       </visual>
-      <pose frame=''>-4.75 4.5 0 0 0 0</pose>
+      <pose frame=''>-4.25 2.25 0 0 0 0</pose>
     </link>
     
     <link name='shelf_5'>
       <collision name='shelf_5_Collision'>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1.5 1</size>
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -317,7 +317,7 @@
         <pose frame=''>0 0 0.5 0 0 0</pose>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1.5 1</size>
           </box>
         </geometry>
         <material>
@@ -328,13 +328,13 @@
           <ambient>1 1 1 1</ambient>
         </material>
       </visual>
-      <pose frame=''>4.75 1.5 0 0 0 0</pose>
+      <pose frame=''>4.25 -2.25 0 0 0 0</pose>
     </link>
     <link name='shelf_6'>
       <collision name='shelf_6_Collision'>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1.5 1</size>
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -353,7 +353,7 @@
         <pose frame=''>0 0 0.5 0 0 0</pose>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1.5 1</size>
           </box>
         </geometry>
         <material>
@@ -364,14 +364,14 @@
           <ambient>1 1 1 1</ambient>
         </material>
       </visual>
-      <pose frame=''>-4.75 1.5 0 0 0 0</pose>
+      <pose frame=''>-4.25 -2.25 0 0 0 0</pose>
     </link>
     
     <link name='shelf_7'>
       <collision name='shelf_7_Collision'>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1 1</size>
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -390,7 +390,7 @@
         <pose frame=''>0 0 0.5 0 0 0</pose>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1 1</size>
           </box>
         </geometry>
         <material>
@@ -401,13 +401,13 @@
           <ambient>1 1 1 1</ambient>
         </material>
       </visual>
-      <pose frame=''>4.75 -1.5 0 0 0 0</pose>
+      <pose frame=''>4.25 -6.5 0 0 0 0</pose>
     </link>
     <link name='shelf_8'>
       <collision name='shelf_8_Collision'>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1 1</size>
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -426,7 +426,7 @@
         <pose frame=''>0 0 0.5 0 0 0</pose>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>5.5 1 1</size>
           </box>
         </geometry>
         <material>
@@ -437,14 +437,14 @@
           <ambient>1 1 1 1</ambient>
         </material>
       </visual>
-      <pose frame=''>-4.75 -1.5 0 0 0 0</pose>
+      <pose frame=''>-4.25 -6.5 0 0 0 0</pose>
     </link>
     
-    <link name='shelf_9'>
+    <!--link name='shelf_9'>
       <collision name='shelf_9_Collision'>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>7 1 1</size>
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -463,7 +463,7 @@
         <pose frame=''>0 0 0.5 0 0 0</pose>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>7 1 1</size>
           </box>
         </geometry>
         <material>
@@ -474,13 +474,13 @@
           <ambient>1 1 1 1</ambient>
         </material>
       </visual>
-      <pose frame=''>4.75 -4.5 0 0 0 0</pose>
+      <pose frame=''>4.5 -4.5 0 0 0 0</pose>
     </link>
     <link name='shelf_10'>
       <collision name='shelf_10_Collision'>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>7 1 1</size>
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -499,7 +499,7 @@
         <pose frame=''>0 0 0.5 0 0 0</pose>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>7 1 1</size>
           </box>
         </geometry>
         <material>
@@ -510,14 +510,14 @@
           <ambient>1 1 1 1</ambient>
         </material>
       </visual>
-      <pose frame=''>-4.75 -4.5 0 0 0 0</pose>
+      <pose frame=''>-4.5 -4.5 0 0 0 0</pose>
     </link>
     
     <link name='shelf_11'>
       <collision name='shelf_11_Collision'>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>7 1 1</size>
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -536,7 +536,7 @@
         <pose frame=''>0 0 0.5 0 0 0</pose>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>7 1 1</size>
           </box>
         </geometry>
         <material>
@@ -547,13 +547,13 @@
           <ambient>1 1 1 1</ambient>
         </material>
       </visual>
-      <pose frame=''>4.75 -7.5 0 0 0 0</pose>
+      <pose frame=''>4.5 -7.5 0 0 0 0</pose>
     </link>
     <link name='shelf_12'>
       <collision name='shelf_12_Collision'>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>7 1 1</size>
           </box>
         </geometry>
         <pose frame=''>0 0 0.5 0 0 0</pose>
@@ -572,7 +572,7 @@
         <pose frame=''>0 0 0.5 0 0 0</pose>
         <geometry>
           <box>
-            <size>6.5 1 1</size>
+            <size>7 1 1</size>
           </box>
         </geometry>
         <material>
@@ -583,8 +583,8 @@
           <ambient>1 1 1 1</ambient>
         </material>
       </visual>
-      <pose frame=''>-4.75 -7.5 0 0 0 0</pose>
-    </link>
+      <pose frame=''>-4.5 -7.5 0 0 0 0</pose>
+    </link-->
     <static>1</static>
   </model>
 </sdf>
